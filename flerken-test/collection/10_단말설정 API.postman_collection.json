@@ -1,0 +1,1046 @@
+{
+	"info": {
+		"_postman_id": "00171a4d-ab3f-4ccf-a32e-7e72a5f52ddd",
+		"name": "10_단말설정 API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "10_01_단말설정 조회",
+			"item": [
+				{
+					"name": "10_01_01_단말설정 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a3f7e0d5-fc85-4bb4-845c-2d766d5a8e73",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"const registBody = eval(globals.userSettings)().registBody;",
+									"",
+									"pm.test('remoteRepository 확인', () => resultBody.remoteRepository);",
+									"pm.test('needUpload 확인', () => pm.expect(resultBody.remoteRepository.needUpload).to.eql('N'));",
+									"",
+									"pm.test('settings 확인', () => resultBody.settings);",
+									"pm.test('car.fuel 확인', () => pm.expect(resultBody.settings['car.fuel']).to.eql(registBody.settings['car.fuel']));",
+									"pm.test('car.model 확인', () => pm.expect(resultBody.settings['car.model']).to.eql(registBody.settings['car.model']));",
+									"pm.test('car.hipassYn 확인', () => pm.expect(resultBody.settings['car.hipassYn']).to.eql(registBody.settings['car.hipassYn']));",
+									"pm.test('car.number 확인', () => pm.expect(resultBody.settings['car.number']).to.eql(registBody.settings['car.number']));",
+									"pm.test('car.insurer 확인', () => pm.expect(resultBody.settings['car.insurer']).to.eql(registBody.settings['car.insurer']));",
+									"pm.test('user.name 확인', () => pm.expect(resultBody.settings['user.name']).to.eql(registBody.settings['user.name']));",
+									"pm.test('user.birth 확인', () => pm.expect(resultBody.settings['user.birth']).to.eql(registBody.settings['user.birth']));",
+									"pm.test('guidance.boxedSpeedTrap 확인', () => pm.expect(resultBody.settings['guidance.boxedSpeedTrap']).to.eql(registBody.settings['guidance.boxedSpeedTrap']));",
+									"pm.test('guidance.speedTrapGuideStartFrom 확인', () => pm.expect(resultBody.settings['guidance.speedTrapGuideStartFrom']).to.eql(registBody.settings['guidance.speedTrapGuideStartFrom']));",
+									"pm.test('guidance.movableSpeedTrap 확인', () => pm.expect(resultBody.settings['guidance.movableSpeedTrap']).to.eql(registBody.settings['guidance.movableSpeedTrap']));",
+									"pm.test('guidance.speedTrapWarningVolume 확인', () => pm.expect(resultBody.settings['guidance.speedTrapWarningVolume']).to.eql( registBody.settings['guidance.speedTrapWarningVolume']));",
+									"pm.test('guidance.fixedSpeedTrap 확인', () => pm.expect(resultBody.settings['guidance.fixedSpeedTrap']).to.eql(registBody.settings['guidance.fixedSpeedTrap']));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "83201150-4eca-4f0f-ac46-d5e9a17cd07f",
+								"exec": [
+									"const userSettings = eval(globals.userSettings)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"const url = `${host}/${userSettings.uri}/${userKey}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(userSettings.registBody)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/user-settings/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-settings",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10_01_02_단말설정 조회 성공 (설정 값 없음)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "60d938e2-424a-4a85-ba8d-6b6a01dd5c7f",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('remoteRepository 확인', () => resultBody.remoteRepository);",
+									"",
+									"pm.test('needUpload Y 확인', () => pm.expect(resultBody.remoteRepository.needUpload).to.eql('Y'));",
+									"pm.test('settings 사용자, 자동차 프로필 필수값 키 있는지 확인', () => pm.expect(Object.keys(resultBody.settings).length).to.eql(9)",
+									");",
+									"",
+									"pm.test('car.fuel 확인', () => pm.expect(resultBody.settings['car.fuel']).to.eql(null));",
+									"pm.test('car.model 확인', () => pm.expect(resultBody.settings['car.model']).to.eql(null));",
+									"pm.test('car.hipassYn 확인', () => pm.expect(resultBody.settings['car.hipassYn']).to.eql(null));",
+									"pm.test('car.number 확인', () => pm.expect(resultBody.settings['car.number']).to.eql(null));",
+									"pm.test('car.insurer 확인', () => pm.expect(resultBody.settings['car.insurer']).to.eql(null));",
+									"pm.test('car.insurerRegDate 확인', () => pm.expect(resultBody.settings['car.insurer']).to.eql(null));",
+									"pm.test('user.name 확인', () => pm.expect(resultBody.settings['user.name']).to.eql(null));",
+									"pm.test('user.birth 확인', () => pm.expect(resultBody.settings['user.birth']).to.eql(null));",
+									"pm.test('user.oilDcCardType 확인', () => pm.expect(resultBody.settings['car.insurer']).to.eql(null));",
+									"",
+									"pm.environment.unset('emptySettingUserKey');"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "eca037dc-73a5-4372-96e8-81915afad433",
+								"exec": [
+									"pm.environment.set('emptySettingUserKey', 'xxxxxxxxxx');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/user-settings/{{emptySettingUserKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-settings",
+								"{{emptySettingUserKey}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "10_02_단말설정 저장",
+			"item": [
+				{
+					"name": "10_02_01_단말설정 저장 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "da53d19c-7931-4fd5-b6b0-5391479689d9",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b7e6b3d8-abc4-4242-96e6-280065b02f23",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"settings\": {\n        \"guidance.speedTrapGuideStartFrom\": \"1\",\n        \"guidance.speedTrapWarningVolume\": \"3\",\n        \"guidance.fixedSpeedTrap\": \"Y\",\n        \"guidance.movableSpeedTrap\": \"Y\",\n        \"guidance.boxedSpeedTrap\": \"Y\",\n        \n        \"user.name\": \"test\",\n        \"user.birth\": \"19880505\",\n        \n        \"car.fuel\": \"FT_GAS\",\n        \"car.model\": \"CT_TRUCK\",\n        \"car.hipassYn\": \"N\",\n        \"car.insurer\": \"INS_DB\",\n        \"car.number\": \"00가0000\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-settings/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-settings",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10_02_02_단말설정 저장 실패 (생년월일 형식 잘못됨)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "96026e08-e029-4d02-b3dd-0ec9f804ec65",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(400));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('reasonCode 확인', () => pm.expect(resultBody.reasonCode).to.eql('REQUEST_VALIDATE_ERROR'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "11da26e5-2c4c-464b-9ab5-d143999ef271",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"settings\": {\n        \"guidance.speedTrapGuideStartFrom\": \"1\",\n        \"guidance.speedTrapWarningVolume\": \"3\",\n        \"guidance.fixedSpeedTrap\": \"Y\",\n        \"guidance.movableSpeedTrap\": \"Y\",\n        \"guidance.boxedSpeedTrap\": \"Y\",\n        \n        \"user.name\": \"test\",\n        \"user.birth\": \"1988-05-05\",\n        \n        \"car.fuel\": \"FT_GAS\",\n        \"car.model\": \"CT_TRUCK\",\n        \"car.hipassYn\": \"N\",\n        \"car.insurer\": \"INS_DB\",\n        \"car.number\": \"00가0000\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-settings/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-settings",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10_02_03_단말설정 저장 성공 (하이패스차량여부Y 수정)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "83c361b7-4cbe-48a6-80cf-fe4dc0d27551",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const userSettings = eval(globals.userSettings)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"const url = `${host}/${userSettings.uri}/${userKey}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'GET',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(userSettings.registBody)",
+									"}, function (err, res) {",
+									"   assertEqualsValues(res.json());",
+									"});",
+									"",
+									"const assertEqualsValues = (responseJson) => {",
+									"    //하이패스 차량여부 값이 제대로 수정되었는지 확인",
+									"    pm.test('하이패스 확인', () => pm.expect(responseJson.settings['car.hipassYn']).to.eql('Y'));",
+									"    ",
+									"    //이외의 속성 값이 영향이 없는지 확인",
+									"    const userSettings = eval(globals.userSettings)();",
+									"    const alreadyRegisteredSettings = userSettings.registBody.settings;",
+									"    pm.test('guidance.speedTrapGuideStartFrom 값 변화 없는지 확인', () => pm.expect(responseJson.settings['guidance.speedTrapGuideStartFrom']).to.eql(alreadyRegisteredSettings['guidance.speedTrapGuideStartFrom']));",
+									"    ",
+									"    pm.test('guidance.speedTrapWarningVolume 값 변화 없는지 확인', () => pm.expect(responseJson.settings['guidance.speedTrapWarningVolume']).to.eql(alreadyRegisteredSettings['guidance.speedTrapWarningVolume']));",
+									"    ",
+									"    pm.test('guidance.fixedSpeedTrap 값 변화 없는지 확인', () => pm.expect(responseJson.settings['guidance.fixedSpeedTrap']).to.eql(alreadyRegisteredSettings['guidance.fixedSpeedTrap']));",
+									"    ",
+									"    pm.test('guidance.movableSpeedTrap 값 변화 없는지 확인', () => pm.expect(responseJson.settings['guidance.movableSpeedTrap']).to.eql(alreadyRegisteredSettings['guidance.movableSpeedTrap']));",
+									"    ",
+									"    pm.test('guidance.boxedSpeedTrap 값 변화 없는지 확인', () => pm.expect(responseJson.settings['guidance.boxedSpeedTrap']).to.eql(alreadyRegisteredSettings['guidance.boxedSpeedTrap']));",
+									"    ",
+									"    pm.test('user.name 값 변화 없는지 확인', () => pm.expect(responseJson.settings['user.name']).to.eql(alreadyRegisteredSettings['user.name']));",
+									"    ",
+									"    pm.test('user.birth 값 변화 없는지 확인', () => pm.expect(responseJson.settings['user.birth']).to.eql(alreadyRegisteredSettings['user.birth']));",
+									"    ",
+									"    pm.test('car.fuel 값 변화 없는지 확인', () => pm.expect(responseJson.settings['car.fuel']).to.eql(alreadyRegisteredSettings['car.fuel']));",
+									"    ",
+									"    pm.test('car.model 값 변화 없는지 확인', () => pm.expect(responseJson.settings['car.model']).to.eql(alreadyRegisteredSettings['car.model']));",
+									"    ",
+									"    pm.test('car.insurer 값 변화 없는지 확인', () => pm.expect(responseJson.settings['car.insurer']).to.eql(alreadyRegisteredSettings['car.insurer']));",
+									"    ",
+									"    pm.test('car.number 값 변화 없는지 확인', () => pm.expect(responseJson.settings['car.number']).to.eql(alreadyRegisteredSettings['car.number']));",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "765fbcc4-d5e6-48b6-9fd2-813d2d1e4e0f",
+								"exec": [
+									"const userSettings = eval(globals.userSettings)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"const url = `${host}/${userSettings.uri}/${userKey}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(userSettings.registBody)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"settings\": {\n        \"car.hipassYn\": \"Y\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-settings/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-settings",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10_02_04_단말설정 저장 성공 (생년월일 수정)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "91770bad-8463-469d-8262-c3c751f091dd",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const userSettings = eval(globals.userSettings)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"const url = `${host}/${userSettings.uri}/${userKey}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'GET',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(userSettings.registBody)",
+									"}, function (err, res) {",
+									"   assertEqualsValues(res.json());",
+									"});",
+									"",
+									"const assertEqualsValues = (responseJson) => {",
+									"    //생년월일 값이 제대로 수정되었는지 확인",
+									"    pm.test(\"생년월일 확인\", () => pm.expect(responseJson.settings['user.birth']).to.eql(\"19900101\"));",
+									"    ",
+									"    //이외의 속성 값이 영향이 없는지 확인",
+									"    const userSettings = eval(globals.userSettings)();",
+									"    const alreadyRegisteredSettings = userSettings.registBody.settings;",
+									"    pm.test('guidance.speedTrapGuideStartFrom 값 변화 없는지 확인', () => pm.expect(responseJson.settings['guidance.speedTrapGuideStartFrom']).to.eql(alreadyRegisteredSettings['guidance.speedTrapGuideStartFrom']));",
+									"    ",
+									"    pm.test('guidance.speedTrapWarningVolume 값 변화 없는지 확인', () => pm.expect(responseJson.settings['guidance.speedTrapWarningVolume']).to.eql(alreadyRegisteredSettings['guidance.speedTrapWarningVolume']));",
+									"    ",
+									"    pm.test('guidance.fixedSpeedTrap 값 변화 없는지 확인', () => pm.expect(responseJson.settings['guidance.fixedSpeedTrap']).to.eql(alreadyRegisteredSettings['guidance.fixedSpeedTrap']));",
+									"    ",
+									"    pm.test('guidance.movableSpeedTrap 값 변화 없는지 확인', () => pm.expect(responseJson.settings['guidance.movableSpeedTrap']).to.eql(alreadyRegisteredSettings['guidance.movableSpeedTrap']));",
+									"    ",
+									"    pm.test('guidance.boxedSpeedTrap 값 변화 없는지 확인', () => pm.expect(responseJson.settings['guidance.boxedSpeedTrap']).to.eql(alreadyRegisteredSettings['guidance.boxedSpeedTrap']));",
+									"    ",
+									"    pm.test('user.name 값 변화 없는지 확인', () => pm.expect(responseJson.settings['user.name']).to.eql(alreadyRegisteredSettings['user.name']));",
+									"    ",
+									"    pm.test('car.fuel 값 변화 없는지 확인', () => pm.expect(responseJson.settings['car.fuel']).to.eql(alreadyRegisteredSettings['car.fuel']));",
+									"    ",
+									"    pm.test('car.model 값 변화 없는지 확인', () => pm.expect(responseJson.settings['car.model']).to.eql(alreadyRegisteredSettings['car.model']));",
+									"    ",
+									"    pm.test('car.hipassYn 값 변화 없는지 확인', () => pm.expect(responseJson.settings['car.hipassYn']).to.eql(alreadyRegisteredSettings['car.hipassYn']));",
+									"        ",
+									"    pm.test('car.insurer 값 변화 없는지 확인', () => pm.expect(responseJson.settings['car.insurer']).to.eql(alreadyRegisteredSettings['car.insurer']));",
+									"    ",
+									"    pm.test('car.number 값 변화 없는지 확인', () => pm.expect(responseJson.settings['car.number']).to.eql(alreadyRegisteredSettings['car.number']));",
+									"}",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "6266d550-c4b2-4069-99d6-458a1e1e1f5d",
+								"exec": [
+									"const userSettings = eval(globals.userSettings)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"const url = `${host}/${userSettings.uri}/${userKey}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(userSettings.registBody)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"settings\": {\n        \"user.birth\": \"19900101\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-settings/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-settings",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ada8121f-ee45-4484-9431-fb8ae003bc6b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "65409078-7df8-4667-9985-513e3bdc9f50",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "10_03_단말설정 조회 (단 건)",
+			"item": [
+				{
+					"name": "10_03_01_단말설정 조회 (단 건) 성공 (key:guidance.speedTrapGuideStartFrom)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "35d16b6f-2510-483c-bffb-8f51d46747e4",
+								"exec": [
+									"pm.environment.set('key_flerken', 'guidance.speedTrapGuideStartFrom');",
+									"",
+									"const userSettings = eval(globals.userSettings)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"const url = `${host}/${userSettings.uri}/${userKey}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(userSettings.registBody)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "74b22e91-64cc-4392-8f9c-977b451ad4ec",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"const registBody = eval(globals.userSettings)().registBody;",
+									"",
+									"pm.test('remoteRepository 확인', () => resultBody.remoteRepository);",
+									"",
+									"pm.test('settings 확인', () => resultBody.settings);",
+									"pm.test('settings 키 있는지 확인', () => pm.expect(Object.keys(resultBody.settings).length).to.eql(1)",
+									");",
+									"",
+									"pm.test('guidance.speedTrapGuideStartFrom 확인', () => pm.expect(resultBody.settings['guidance.speedTrapGuideStartFrom']).to.eql(registBody.settings['guidance.speedTrapGuideStartFrom']));",
+									"",
+									"pm.environment.unset('key_flerken');",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/user-settings/{{userKey}}/keys/{{key_flerken}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-settings",
+								"{{userKey}}",
+								"keys",
+								"{{key_flerken}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10_03_02_단말설정 조회 (단 건) 성공 (key:car.hipassYn)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aa736b35-72f4-43f7-98e2-89f8fd36ee12",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"const registBody = eval(globals.userSettings)().registBody;",
+									"",
+									"pm.test('remoteRepository 확인', () => resultBody.remoteRepository);",
+									"",
+									"pm.test('settings 확인', () => resultBody.settings);",
+									"pm.test('settings 키 있는지 확인', () => pm.expect(Object.keys(resultBody.settings).length).to.eql(1)",
+									");",
+									"",
+									"pm.test('car.hipassYn 확인', () => pm.expect(resultBody.settings['car.hipassYn']).to.eql(registBody.settings['car.hipassYn']));",
+									"",
+									"pm.environment.unset('key_car');"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "dd99b188-2db6-4640-9a16-78585184a7ed",
+								"exec": [
+									"pm.environment.set('key_car', 'car.hipassYn');",
+									"",
+									"const userSettings = eval(globals.userSettings)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"const url = `${host}/${userSettings.uri}/${userKey}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(userSettings.registBody)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/user-settings/{{userKey}}/keys/{{key_car}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-settings",
+								"{{userKey}}",
+								"keys",
+								"{{key_car}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10_03_03_단말설정 조회 (단 건) 성공 (key:user.birth)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c647a982-2d6a-4834-865b-e6bb268bad16",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"const registBody = eval(globals.userSettings)().registBody;",
+									"",
+									"pm.test('remoteRepository 확인', () => resultBody.remoteRepository);",
+									"",
+									"pm.test('settings 확인', () => resultBody.settings);",
+									"pm.test('settings 키 있는지 확인', () => pm.expect(Object.keys(resultBody.settings).length).to.eql(1)",
+									");",
+									"",
+									"pm.test('user.birth 확인', () => pm.expect(resultBody.settings['user.birth']).to.eql(registBody.settings['user.birth']));",
+									"",
+									"pm.environment.unset('key_user');"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "aa18d671-aa09-4c83-bcdc-ca8aed8f1d47",
+								"exec": [
+									"pm.environment.set('key_user', 'user.birth');",
+									"",
+									"const userSettings = eval(globals.userSettings)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"const url = `${host}/${userSettings.uri}/${userKey}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(userSettings.registBody)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/user-settings/{{userKey}}/keys/{{key_user}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-settings",
+								"{{userKey}}",
+								"keys",
+								"{{key_user}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10_03_04_단말설정 조회 (단 건) 성공  (설정 값 없음.)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "810b4971-ea04-4b8b-9226-496ac85d01e1",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('remoteRepository 확인', () => resultBody.remoteRepository);",
+									"",
+									"pm.test('settings 확인', () => resultBody.settings);",
+									"pm.test('settings 키 있는지 확인', () => pm.expect(Object.keys(resultBody.settings).length).to.eql(1)",
+									");",
+									"",
+									"pm.test('emptySettingKey 확인', () => pm.expect(resultBody.settings['xxxxxx']).to.eql(null));",
+									"",
+									"pm.environment.unset('emptySettingUserKey');",
+									"pm.environment.unset('emptySettingKey');"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ee4ca856-0874-4d68-973f-7359515a98ff",
+								"exec": [
+									"pm.environment.set('emptySettingUserKey', 'xxxxxxxxxx');",
+									"pm.environment.set('emptySettingKey', 'xxxxxx');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/user-settings/{{emptySettingUserKey}}/keys/{{emptySettingKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-settings",
+								"{{emptySettingUserKey}}",
+								"keys",
+								"{{emptySettingKey}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "85c470a0-30f0-4ec7-a150-bb5b98d0040e",
+				"type": "text/javascript",
+				"exec": [
+					"postman.setGlobalVariable('userSettings', () => {",
+					"    return {",
+					"        \"uri\": \"api/v1/user-settings\",",
+					"        \"registBody\": {",
+					"            \"settings\": {",
+					"                \"guidance.speedTrapGuideStartFrom\": \"1\",",
+					"                \"guidance.speedTrapWarningVolume\": \"3\",",
+					"                \"guidance.fixedSpeedTrap\": \"Y\",",
+					"                \"guidance.movableSpeedTrap\": \"Y\",",
+					"                \"guidance.boxedSpeedTrap\": \"Y\",",
+					"                ",
+					"                \"user.name\": \"test\",",
+					"                \"user.birth\": \"19880505\",",
+					"                ",
+					"                \"car.fuel\": \"FT_GAS\",",
+					"                \"car.model\": \"CT_TRUCK\",",
+					"                \"car.hipassYn\": \"N\",",
+					"                \"car.insurer\": \"INS_DB\",",
+					"                \"car.number\": \"00가0000\"",
+					"            }",
+					"        }",
+					"    }",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c0c062e3-399c-4ad7-86f0-b1cd5eb1a1a3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

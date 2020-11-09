@@ -1,0 +1,1436 @@
+{
+	"info": {
+		"_postman_id": "11b4c94c-7773-41d0-816c-7986720c3042",
+		"name": "13_운전자 보험",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "13_01_보험 가입자 수 조회",
+			"item": [
+				{
+					"name": "운전자 보험 가입자 수 조회 (전체 + 월)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bb730dfe-7e81-4c6a-8a43-419e46800c20",
+								"exec": [
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.registerContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "035962c7-1e98-464c-92da-f82d19563c42",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"tests[\"totalInsuredCount 확인\"] = resultBody.totalInsuredCount;",
+									"pm.test('insuredCount 1건 확인', () => pm.expect(resultBody.insuredCount).to.eql(1));",
+									"",
+									"// 테스트 데이터 삭제",
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.removeContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}/insured/count?signUpDate=&signUpMonth=202007",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}",
+								"insured",
+								"count"
+							],
+							"query": [
+								{
+									"key": "signUpDate",
+									"value": ""
+								},
+								{
+									"key": "signUpMonth",
+									"value": "202007"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "운전자 보험 가입자 수 조회 (전체)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4f8cd64d-c157-448c-b8a1-36a91870d8f5",
+								"exec": [
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.registerContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "ebe979e9-94ad-49a2-9f1d-c048e700bef8",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"tests[\"totalInsuredCount 확인\"] = resultBody.totalInsuredCount;",
+									"pm.test('insuredCount null 확인', () => pm.expect(resultBody.insuredCount).to.eql(null));",
+									"",
+									"// 테스트 데이터 삭제",
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.removeContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}/insured/count?signUpDate=&signUpMonth=",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}",
+								"insured",
+								"count"
+							],
+							"query": [
+								{
+									"key": "signUpDate",
+									"value": ""
+								},
+								{
+									"key": "signUpMonth",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "운전자 보험 가입자 수 조회 (전체 + 일)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1083552f-6f51-4224-bdc5-7fa60f9f18bb",
+								"exec": [
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.registerContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "dca8de78-770a-4eab-9123-2e905da0f79e",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"tests[\"totalInsuredCount 확인\"] = resultBody.totalInsuredCount;",
+									"pm.test('insuredCount 0건 확인', () => pm.expect(resultBody.insuredCount).to.eql(0));",
+									"",
+									"// 테스트 데이터 삭제",
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.removeContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}/insured/count?signUpDate=20200702&signUpMonth=",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}",
+								"insured",
+								"count"
+							],
+							"query": [
+								{
+									"key": "signUpDate",
+									"value": "20200702"
+								},
+								{
+									"key": "signUpMonth",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "운전자 보험 가입자 수 조회 (전체 + 월 + 일 우선순위 적용)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "625f9bc7-7192-4a37-b153-6ad6b3698fa2",
+								"exec": [
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.registerContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "8baea001-e061-48e0-8ffd-0db57180fd58",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"tests[\"totalInsuredCount 확인\"] = resultBody.totalInsuredCount;",
+									"pm.test('insuredCount 1건 확인', () => pm.expect(resultBody.insuredCount).to.eql(1));",
+									"",
+									"// 테스트 데이터 삭제",
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.removeContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}/insured/count?signUpDate=20200703&signUpMonth=202006",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}",
+								"insured",
+								"count"
+							],
+							"query": [
+								{
+									"key": "signUpDate",
+									"value": "20200703"
+								},
+								{
+									"key": "signUpMonth",
+									"value": "202006"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5fceedb0-f70b-43a8-b42d-d4ef3807b6ea",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "80865be1-74ea-40b2-9f65-54e708b172da",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "13_02_보험 계약 조회",
+			"item": [
+				{
+					"name": "유저키로 보험 계약 조회",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f3ab4406-1eb4-4c21-896c-af8e478f1885",
+								"exec": [
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.registerContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "30596963-a7ba-4916-8ba5-cb5358f60583",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"tests[\"insured 확인\"] = resultBody.insured;",
+									"tests[\"contract 확인\"] = resultBody.contract;",
+									"tests[\"contractId 확인\"] = resultBody.contract.contractId;",
+									"",
+									"const registerBody = eval(globals.drivingInsurance)().registerContractBody;",
+									"pm.test('insured.userKey 확인', () => pm.expect(resultBody.insured.userKey).to.eql(registerBody.insured.userKey));",
+									"pm.test('insured.name 확인', () => pm.expect(resultBody.insured.name).to.eql(registerBody.insured.name));",
+									"pm.test('insured.mdn 확인', () => pm.expect(resultBody.insured.mdn).to.eql(registerBody.insured.mdn));",
+									"pm.test('insured.birth 확인', () => pm.expect(resultBody.insured.birth).to.eql(registerBody.insured.birth.toString()));",
+									"pm.test('insured.gender 확인', () => pm.expect(resultBody.insured.gender).to.eql(registerBody.insured.gender));",
+									"",
+									"pm.test('contract.userKey 확인', () => pm.expect(resultBody.contract.userKey).to.eql(registerBody.insured.userKey));",
+									"pm.test('contract.insurer 확인', () => pm.expect(resultBody.contract.insurer).to.eql(pm.variables.get('insurer')));",
+									"pm.test('contract.insurancePlan 확인', () => pm.expect(resultBody.contract.insurancePlan).to.eql(pm.variables.get('insurancePlan')));",
+									"pm.test('contract.signUpDate 확인', () => pm.expect(resultBody.contract.signUpDate).to.eql(registerBody.signUpDate));",
+									"pm.test('contract.coveragePeriod.startDateTime 확인', () => pm.expect(resultBody.contract.coveragePeriod.startDateTime).to.eql(registerBody.coveragePeriod.startDateTime));",
+									"pm.test('contract.coveragePeriod.endDateTime 확인', () => pm.expect(resultBody.contract.coveragePeriod.endDateTime).to.eql(registerBody.coveragePeriod.endDateTime));",
+									"pm.test('contract.coverages[0].key 확인', () => pm.expect(resultBody.contract.coverages[0].key).to.eql(registerBody.coverages[0].key));",
+									"pm.test('contract.coverages[0].value 확인', () => pm.expect(resultBody.contract.coverages[0].value).to.eql(registerBody.coverages[0].value));",
+									"pm.test('contract.contractStatus 확인', () => pm.expect(resultBody.contract.contractStatus).to.eql(registerBody.contractStatus));",
+									"",
+									"// 테스트 데이터 삭제",
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.removeContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}/insured?userKey={{userKey}}&contractStatus=N",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}",
+								"insured"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "contractStatus",
+									"value": "N"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "유저키로 보험 계약 조회 (계약상태 누락)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a6531fd7-2582-4545-81f2-76b93fd93db3",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(400));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('code 확인', () => pm.expect(resultBody.code).to.eql('POI02001R'));",
+									"pm.test('reasonCode 확인', () => pm.expect(resultBody.reasonCode).to.eql('REQUEST_VALIDATE_ERROR'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}/insured?userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}",
+								"insured"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "유저키로 보험 계약 조회 (계약상태 잘못됨)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f5fe7a8b-8bb9-4ef8-a534-a1d6cd9e4c69",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(400));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('code 확인', () => pm.expect(resultBody.code).to.eql('POI02001R'));",
+									"pm.test('reasonCode 확인', () => pm.expect(resultBody.reasonCode).to.eql('REQUEST_VALIDATE_ERROR'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}/insured?userKey={{userKey}}&contractStatus=NORMAL",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}",
+								"insured"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "contractStatus",
+									"value": "NORMAL"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "개인 정보로 보험 계약 조회",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b29537c6-4d5b-4629-a943-d2f0a9bec9d4",
+								"exec": [
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.registerContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "aad3023a-a11e-4207-9fb9-9dda24980f78",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"tests[\"insured 확인\"] = resultBody.insured;",
+									"tests[\"contract 확인\"] = resultBody.contract;",
+									"tests[\"contractId 확인\"] = resultBody.contract.contractId;",
+									"",
+									"const registerBody = eval(globals.drivingInsurance)().registerContractBody;",
+									"pm.test('insured.userKey 확인', () => pm.expect(resultBody.insured.userKey).to.eql(registerBody.insured.userKey));",
+									"pm.test('insured.name 확인', () => pm.expect(resultBody.insured.name).to.eql(registerBody.insured.name));",
+									"pm.test('insured.mdn 확인', () => pm.expect(resultBody.insured.mdn).to.eql(registerBody.insured.mdn));",
+									"pm.test('insured.birth 확인', () => pm.expect(resultBody.insured.birth).to.eql(registerBody.insured.birth.toString()));",
+									"pm.test('insured.gender 확인', () => pm.expect(resultBody.insured.gender).to.eql(registerBody.insured.gender));",
+									"",
+									"pm.test('contract.userKey 확인', () => pm.expect(resultBody.contract.userKey).to.eql(registerBody.insured.userKey));",
+									"pm.test('contract.insurer 확인', () => pm.expect(resultBody.contract.insurer).to.eql(pm.variables.get('insurer')));",
+									"pm.test('contract.insurancePlan 확인', () => pm.expect(resultBody.contract.insurancePlan).to.eql(pm.variables.get('insurancePlan')));",
+									"pm.test('contract.signUpDate 확인', () => pm.expect(resultBody.contract.signUpDate).to.eql(registerBody.signUpDate));",
+									"pm.test('contract.coveragePeriod.startDateTime 확인', () => pm.expect(resultBody.contract.coveragePeriod.startDateTime).to.eql(registerBody.coveragePeriod.startDateTime));",
+									"pm.test('contract.coveragePeriod.endDateTime 확인', () => pm.expect(resultBody.contract.coveragePeriod.endDateTime).to.eql(registerBody.coveragePeriod.endDateTime));",
+									"pm.test('contract.coverages[0].key 확인', () => pm.expect(resultBody.contract.coverages[0].key).to.eql(registerBody.coverages[0].key));",
+									"pm.test('contract.coverages[0].value 확인', () => pm.expect(resultBody.contract.coverages[0].value).to.eql(registerBody.coverages[0].value));",
+									"pm.test('contract.contractStatus 확인', () => pm.expect(resultBody.contract.contractStatus).to.eql(registerBody.contractStatus));",
+									"",
+									"// 테스트 데이터 삭제",
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.removeContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"birth\": 19901015,\n  \"name\": \"testusername\",\n  \"contractStatus\":\"N\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}/insured",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}",
+								"insured"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "개인 정보로 보험 계약 조회 (계약상태 누락)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a1098c5-62dd-4770-b8aa-9c7b01a2e83e",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(400));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('code 확인', () => pm.expect(resultBody.code).to.eql('POI02001R'));",
+									"pm.test('reasonCode 확인', () => pm.expect(resultBody.reasonCode).to.eql('REQUEST_VALIDATE_ERROR'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tidq",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"birth\": 19901015,\n  \"name\": \"testusername\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}/insured",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}",
+								"insured"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "13_03_보험 계약 저장",
+			"item": [
+				{
+					"name": "보험 계약 정보 저장 (임시저장)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4066d3b1-3fcc-45d9-b689-5bc0e7c43ce9",
+								"exec": [
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.removeContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "8fe2fddf-20ec-4615-8cd9-63bd95cc3568",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"// 테스트 데이터 삭제",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.removeContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"insured\": {\n    \"userKey\": \"{{userKey}}\",\n    \"name\": \"testusername\",\n    \"mdn\": \"01011111112\",\n    \"birth\": \"19901015\",\n    \"gender\": \"M\"\n  },\n  \"coveragePeriod\": {\n    \"endDateTime\": \"20210704235959\",\n    \"startDateTime\": \"20200703235959\"\n  },\n  \"coverages\": [\n    {\n      \"key\": \"변호사선임비용\",\n      \"value\": \"5백만원\"\n    }\n  ],\n  \"signUpDate\": \"20200703\",\n  \"contractStatus\" : \"T\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "보험 계약 정보 저장 (보장기간 누락)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9bcc6aae-4727-4643-aad4-ab9be3b2b517",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(400));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('code 확인', () => pm.expect(resultBody.code).to.eql('POI02001R'));",
+									"pm.test('reasonCode 확인', () => pm.expect(resultBody.reasonCode).to.eql('REQUEST_VALIDATE_ERROR'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"insured\": {\n    \"userKey\": \"{{userKey}}\",\n    \"name\": \"testusername\",\n    \"mdn\": \"01011111112\",\n    \"birth\": \"19901015\",\n    \"gender\": \"M\"\n  },\n  \"coveragePeriod\": {\n    \"endDateTime\": \"20210704235959\"\n  },\n  \"coverages\": [\n    {\n      \"key\": \"변호사선임비용\",\n      \"value\": \"5백만원\"\n    }\n  ],\n  \"signUpDate\": \"20200703\",\n  \"contractStatus\" : \"T\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "보험 계약 정보 저장 (정상저장)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "99884287-b579-4d1c-b914-035ca2fcff5f",
+								"exec": [
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.removeContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "171a9c5e-dbe6-4458-8a3d-3b3a49637206",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const drivingInsurance = eval(globals.drivingInsurance)();",
+									"const host = pm.variables.get('host');",
+									"const url = `${host}${drivingInsurance.uri}`;",
+									"",
+									"// 테스트 데이터 삭제",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(drivingInsurance.removeContractBody)",
+									"}, function(err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"insured\": {\n    \"userKey\": \"{{userKey}}\",\n    \"name\": \"testusername\",\n    \"mdn\": \"01011111112\",\n    \"birth\": \"19901015\",\n    \"gender\": \"M\"\n  },\n  \"coveragePeriod\": {\n    \"endDateTime\": \"20210704235959\",\n    \"startDateTime\": \"20200703235959\"\n  },\n  \"coverages\": [\n    {\n      \"key\": \"변호사선임비용\",\n      \"value\": \"5백만원\"\n    }\n  ],\n  \"signUpDate\": \"20200703\",\n  \"contractStatus\" : \"N\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "보험 계약 정보 저장 (계약상태 누락)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bf03b7e6-2cd0-489e-a768-ae0dcde3397a",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(400));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('code 확인', () => pm.expect(resultBody.code).to.eql('POI02001R'));",
+									"pm.test('reasonCode 확인', () => pm.expect(resultBody.reasonCode).to.eql('REQUEST_VALIDATE_ERROR'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"insured\": {\n    \"userKey\": \"{{userKey}}\",\n    \"name\": \"testusername\",\n    \"mdn\": \"01011111112\",\n    \"birth\": \"19901015\",\n    \"gender\": \"M\"\n  },\n  \"coveragePeriod\": {\n    \"endDateTime\": \"20210704235959\",\n    \"startDateTime\": \"20200703235959\"\n  },\n  \"coverages\": [\n    {\n      \"key\": \"변호사선임비용\",\n      \"value\": \"5백만원\"\n    }\n  ],\n  \"signUpDate\": \"20200703\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "13_04_보험 계약 삭제",
+			"item": [
+				{
+					"name": "보험 계약 정보 삭제",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e9177c8c-7785-4f10-bcf6-d63613098324",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userKey\":\"{{userKey}}\",\n  \"contractStatus\":\"N\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/insurers/{{insurer}}/plans/{{insurancePlan}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"insurers",
+								"{{insurer}}",
+								"plans",
+								"{{insurancePlan}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "cfc8b725-bc25-4b72-a1af-06b6e7686ed7",
+				"type": "text/javascript",
+				"exec": [
+					"postman.setGlobalVariable('drivingInsurance', () => {",
+					"    const insurer = pm.variables.get('insurer');",
+					"    const insurancePlan = pm.variables.get('insurancePlan');",
+					"    const userKey = pm.variables.get('userKey');",
+					"    return {",
+					"        \"uri\": `/api/v1/insurers/${insurer}/plans/${insurancePlan}`,",
+					"        \"insuredUri\": `/api/v1/insurers/${insurer}/plans/${insurancePlan}/insured`,",
+					"        \"insuredCountUri\": `/api/v1/insurers/${insurer}/plans/${insurancePlan}/insured/count`,",
+					"        \"findContractByPersonalInfoBody\": {",
+					"                \"birth\": 19901015,",
+					"                \"name\": \"testusername\",",
+					"                \"contractStatus\":\"N\"",
+					"        },",
+					"        \"registerContractBody\": {",
+					"            \"insured\": {",
+					"              \"userKey\": `${userKey}`,",
+					"              \"name\": \"testusername\",",
+					"              \"mdn\": \"01011111112\",",
+					"              \"birth\": 19901015,",
+					"              \"gender\": \"M\"",
+					"            },",
+					"            \"coveragePeriod\": {",
+					"              \"endDateTime\": \"20210704235959\",",
+					"              \"startDateTime\": \"20200703235959\"",
+					"            },",
+					"            \"coverages\": [",
+					"              {",
+					"                \"key\": \"변호사선임비용\",",
+					"                \"value\": \"5백만원\"",
+					"              }",
+					"            ],",
+					"            \"signUpDate\": \"20200703\",",
+					"            \"contractStatus\" : \"N\"",
+					"          },",
+					"          \"removeContractBody\": {",
+					"            \"userKey\": `${userKey}`,",
+					"            \"contractStatus\" : \"N\"",
+					"          }",
+					"    }",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "936192a2-1ca5-45aa-bc05-7b7bb60e9872",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

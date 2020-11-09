@@ -1,0 +1,747 @@
+{
+	"info": {
+		"_postman_id": "7a1ac9a3-dc20-404f-8fa1-d09a3ea0f010",
+		"name": "06_주유할인 가입정보 API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "06_08_주유할인 가입정보 저장",
+			"item": [
+				{
+					"name": "06_08_01_주유할인 가입 정보 저장 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "886d8a0b-5002-4ad2-889c-17e090e32a02",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b71d056c-3a68-4e25-a20a-eec94137bc92",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"cardType\": \"SSCD\",\n\t\"registDatetime\": \"20180717153000\",\n\t\"registType\": \"R\",\n\t\"userKey\": \"{{userKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/oil-dc-join-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"oil-dc-join-info"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "06_08_02_주유할인 탈퇴 정보 저장 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea84ef25-2c12-4c68-bde1-82ed4f2eda0f",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "46e04414-f2b7-4d03-b2b9-34547729dd6a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"cardType\": \"SSCD\",\n\t\"registDatetime\": \"20180717153000\",\n\t\"registType\": \"C\",\n\t\"userKey\": \"{{userKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/oil-dc-join-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"oil-dc-join-info"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "06_08_03_유효하지 않는 카드 타입일 때 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dd7dcc96-79f3-486b-bf62-f7b89a0d6699",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 400;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code === 'POI02002R';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode === 'REQUEST_VALIDATE_ERROR';"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "58336425-b2f3-4a77-85b7-388a9736ab91",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"cardType\": \"TEST\",\n\t\"registDatetime\": \"20180717153000\",\n\t\"registType\": \"R\",\n\t\"userKey\": \"{{userKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/oil-dc-join-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"oil-dc-join-info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "06_08_04_유효하지 않는 가입구분 값일 때 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e40bbd93-cef7-4f50-8fce-75507812adf6",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 400;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code === 'POI02002R';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode === 'REQUEST_VALIDATE_ERROR';",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a247c9e5-4b17-4cfe-825c-3e408f9751a2",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"cardType\": \"HNCD\",\n\t\"registDatetime\": \"20180717153000\",\n\t\"registType\": \"Z\",\n\t\"userKey\": \"{{userKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/oil-dc-join-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"oil-dc-join-info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "06_08_05_주유할인 롯데카드 가입 정보 저장 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "403b2c5e-5b3a-4541-a599-1c89a4542562",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7d038155-31ee-4b5b-b536-ed751007405c",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"cardType\": \"LTCD\",\n\t\"registDatetime\": \"20190717153000\",\n\t\"registType\": \"R\",\n\t\"userKey\": \"{{userKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/oil-dc-join-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"oil-dc-join-info"
+							]
+						},
+						"description": "롯데카드 가입정보 저장 TC"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "06_09_주유할인 가입정보 조회",
+			"item": [
+				{
+					"name": "06_09_01_주유할인 가입 정보 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "98fb127a-49a2-49c7-ad2b-dea555f12905",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"주유할인 list 확인\"] = resultBody.oilDcJoinInfos && resultBody.oilDcJoinInfos.length > 0;",
+									"",
+									"tests[\"하나카드 가입 상태 확인\"] = _.find(resultBody.oilDcJoinInfos, {'cardType': 'HNCD'}).registYn === 'Y';"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "45b458dd-c4ea-4b7e-b925-f9a1913d0bea",
+								"exec": [
+									"let oilDcJoinInfo = eval(globals.oilDcJoinInfo)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 데이터 사전 등록 : 하나카드 가입",
+									"let url = pm.variables.get('host') + oilDcJoinInfo.uri;",
+									"let registBody = oilDcJoinInfo.registBody;",
+									"registBody.userKey = pm.variables.get('userKey');",
+									"registBody.registType = \"R\";  // 가입상태",
+									"registBody.cardType = 'HNCD';  ",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(registBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 사전 등록 : 하나카드 가입', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/oil-dc-join-info?userKey={{userKey}}&cardType=",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"oil-dc-join-info"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "cardType",
+									"value": ""
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "06_09_02_주유할인 탈퇴 정보 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a8fea07c-6e20-4a53-a561-9afeb5e2213a",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"주유할인 list 확인\"] = resultBody.oilDcJoinInfos && resultBody.oilDcJoinInfos.length > 0;",
+									"",
+									"tests[\"하나카드 탈퇴 상태 확인\"] = _.find(resultBody.oilDcJoinInfos, {'cardType': 'HNCD'}).registYn === 'N';"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "53f100b3-5103-4629-b80e-2ec97136a3b2",
+								"exec": [
+									"let oilDcJoinInfo = eval(globals.oilDcJoinInfo)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 데이터 사전 등록 : 하나카드 탈퇴",
+									"let url = pm.variables.get('host') + oilDcJoinInfo.uri;",
+									"let registBody = oilDcJoinInfo.registBody;",
+									"registBody.userKey = pm.variables.get('userKey');",
+									"registBody.registType = \"C\"; // 탈퇴 상태",
+									"registBody.cardType = 'HNCD';  ",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(registBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 사전 등록 : 하나카드 탈퇴', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/oil-dc-join-info?userKey={{userKey}}&cardType=",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"oil-dc-join-info"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "cardType",
+									"value": ""
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "06_09_03_주유할인 가입정보 없음 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "41cc013b-921e-4d94-a1d6-a301babd7d44",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code === 'POI04001R';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode === 'NULLRESULT_ERROR';",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "505bad6b-8394-4764-901a-065a51e0245c",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/oil-dc-join-info?userKey={{userKey}}&cardType=SHCD",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"oil-dc-join-info"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "cardType",
+									"value": "SHCD"
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ce69a3a6-62cc-4c91-8452-37c37c763599",
+				"type": "text/javascript",
+				"exec": [
+					"postman.setGlobalVariable('oilDcJoinInfo', () => {",
+					"    return {",
+					"        uri: \"/api/v1/oil-dc-join-info\",",
+					"        registBody: {",
+					"            \"cardType\": \"HNCD\",",
+					"            \"registDatetime\": \"20190101123030\",",
+					"            \"registType\": \"R\",",
+					"            \"userKey\": \"\"",
+					"        }",
+					"    }",
+					"});",
+					"",
+					"",
+					"postman.setGlobalVariable('utils', () => {",
+					"    let getHeader = () => {",
+					"      return {",
+					"        'chcode': pm.variables.get('chcode'),",
+					"        'cp_channel.apcode': pm.variables.get('cp_channel.apcode'),",
+					"        'cp_channel.ostype': pm.variables.get('cp_channel.ostype'),",
+					"        'tid': pm.variables.get('tid'),",
+					"        'content-type': 'application/json'",
+					"      };",
+					"    };",
+					"    ",
+					"    return {",
+					"        getHeader: getHeader",
+					"    }",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "f3c92dad-ad83-438a-b3a5-bbecad79c2af",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

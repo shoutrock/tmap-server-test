@@ -1,0 +1,633 @@
+{
+	"info": {
+		"_postman_id": "80275c11-7d6a-4370-b845-3a0539780b4c",
+		"name": "07_차량전송 정보 API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "07_05_차량전송 정보 등록",
+			"item": [
+				{
+					"name": "07_05_01_차량전송 정보 등록 성공 (롯데백화점)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905c2ef7-5e98-4239-8153-6d13da3bcf24",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"custName\": \"롯데백화점 정문\",\n\t\"navSeq\": \"0\",\n\t\"noorX\": \"4571403\",\n\t\"noorY\": \"1352267\",\n\t\"poiId\": \"219475\",\n\t\"rpFlag\": \"16\",\n\t\"userKey\": \"{{userKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/send-to-car-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"send-to-car-info"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "07_05_02_차량전송 정보 등록 성공 (현대백화점)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905c2ef7-5e98-4239-8153-6d13da3bcf24",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"custName\": \"현대백화점 압구정본점\",\n\t\"navSeq\": \"0\",\n\t\"noorX\": \"4573053\",\n\t\"noorY\": \"1350912\",\n\t\"poiId\": \"292664\",\n\t\"rpFlag\": \"16\",\n\t\"userKey\": \"{{userKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/send-to-car-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"send-to-car-info"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "07_06_차량전송 정보 조회",
+			"item": [
+				{
+					"name": "07_06_01_등록된 데이터 있을 때 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"차량전송 정보 조회 확인\"] = resultBody.custName && resultBody.noorX && resultBody.noorY;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e509175-42f5-42da-827d-d8267f36df5c",
+								"exec": [
+									"let sendToCarInfo = eval(globals.sendToCarInfo)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 데이터 사전 등록",
+									"let url = pm.variables.get('host') + sendToCarInfo.uri;",
+									"let registBody = sendToCarInfo.registBody;",
+									"registBody.userKey = pm.variables.get('userKey');",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(registBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/send-to-car-info?userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"send-to-car-info"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "07_06_02_등록된 데이터 없을 때 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"code 확인\"] = resultBody.code === 'POI04001R';",
+									"tests[\"reasonCode 확인\"] = resultBody.reasonCode === 'NULLRESULT_ERROR';"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e509175-42f5-42da-827d-d8267f36df5c",
+								"exec": [
+									"let sendToCarInfo = eval(globals.sendToCarInfo)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 삭제할 데이터를 먼저 등록",
+									"let url = pm.variables.get('host') + sendToCarInfo.uri;",
+									"let registBody = sendToCarInfo.registBody;",
+									"registBody.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(registBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 삭제할 데이터를 먼저 등록', () => pm.expect(response).to.have.status(200));",
+									"    removePreData();",
+									"});",
+									"",
+									"function removePreData() {",
+									"    // 등록된 데이터 삭제",
+									"    let removeBody = sendToCarInfo.removeBody;",
+									"    removeBody.userKey = pm.variables.get('userKey');",
+									"    pm.sendRequest({",
+									"        url: url,",
+									"        method: 'DELETE',",
+									"        header: utils.getHeader(),",
+									"        body: JSON.stringify(registBody)",
+									"    }, function (err, response) {",
+									"        pm.test('Pre] 등록된 데이터 삭제', () => pm.expect(response).to.have.status(200));",
+									"    });   ",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/send-to-car-info?userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"send-to-car-info"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "07_07_차량전송 정보 삭제",
+			"item": [
+				{
+					"name": "07_07_01_등록된 데이터 있을 때 삭제 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905c2ef7-5e98-4239-8153-6d13da3bcf24",
+								"exec": [
+									"let sendToCarInfo = eval(globals.sendToCarInfo)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 데이터 사전 등록",
+									"let url = pm.variables.get('host') + sendToCarInfo.uri;",
+									"let registBody = sendToCarInfo.registBody;",
+									"registBody.userKey = pm.variables.get('userKey');",
+									"registBody.custName = '현대백화점 압구정본점';",
+									"registBody.noorX = '4573053';",
+									"registBody.noorY = '1350912';",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(registBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"custName\": \"현대백화점 압구정본점\",\n    \"noorX\": \"4573053\",\n    \"noorY\": \"1350912\",\n    \"userKey\": \"{{userKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/send-to-car-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"send-to-car-info"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "07_08_01_등록된 데이터 없어도 삭제시 성공으로 리턴",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905c2ef7-5e98-4239-8153-6d13da3bcf24",
+								"exec": [
+									"let sendToCarInfo = eval(globals.sendToCarInfo)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 데이터 삭제",
+									"let url = pm.variables.get('host') + sendToCarInfo.uri;",
+									"let removeBody = sendToCarInfo.removeBody;",
+									"removeBody.userKey = pm.variables.get('userKey');",
+									"removeBody.custName = '롯데백화점 정문';",
+									"removeBody.noorX = '4571403';",
+									"removeBody.noorY = '1352267';",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'DELETE',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(removeBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 삭제', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"custName\": \"롯데백화점 정문\",\n    \"noorX\": \"4571403\",\n    \"noorY\": \"1352267\",\n    \"userKey\": \"{{userKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/send-to-car-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"send-to-car-info"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "8efd15c6-53df-42d9-b118-cbc36ec4d789",
+				"type": "text/javascript",
+				"exec": [
+					"postman.setGlobalVariable('sendToCarInfo', () => {",
+					"    return {",
+					"        uri: \"/api/v1/send-to-car-info\",",
+					"        registBody: {",
+					"            \"custName\": \"파인애비뉴\",",
+					"            \"navSeq\": \"0\",",
+					"            \"noorX\": \"4571653\",",
+					"            \"noorY\": \"1352256\",",
+					"            \"poiId\": \"2786471\",",
+					"            \"rpFlag\": \"0\",",
+					"            \"userKey\": \"\"",
+					"        },",
+					"        removeBody: {",
+					"            \"custName\": \"파인애비뉴\",",
+					"            \"noorX\": \"4571653\",",
+					"            \"noorY\": \"1352256\",",
+					"            \"userKey\": \"\"",
+					"        }",
+					"    }",
+					"});",
+					"",
+					"",
+					"postman.setGlobalVariable('utils', () => {",
+					"    let getHeader = () => {",
+					"      return {",
+					"        'chcode': pm.variables.get('chcode'),",
+					"        'cp_channel.apcode': pm.variables.get('cp_channel.apcode'),",
+					"        'cp_channel.ostype': pm.variables.get('cp_channel.ostype'),",
+					"        'tid': pm.variables.get('tid'),",
+					"        'content-type': 'application/json'",
+					"      };",
+					"    };",
+					"    ",
+					"    return {",
+					"        getHeader: getHeader",
+					"    }",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "98db627f-f0b4-4610-ba46-0ae645e056f8",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

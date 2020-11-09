@@ -1,0 +1,1926 @@
+{
+	"info": {
+		"_postman_id": "92e5afa4-750a-4758-ba31-b7a3c315f9ed",
+		"name": "08_사용자 데이터(개인화) 조회 API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "08_01_최근길/즐겨찾기 전체 다운로드",
+			"item": [
+				{
+					"name": "08_01_01_최근길/즐겨찾기 조회 성공",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71f59499-73ab-40f1-a0ef-8cdba3289516",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"let poiUrl = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let poiUploadBody = poiFavorite.uploadBody;",
+									"poiUploadBody.minNo = pm.variables.get('minNo_personal');",
+									"poiUploadBody.userKey = pm.variables.get('userKey_personal');",
+									"pm.sendRequest({",
+									"    url: poiUrl,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiUploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] POI 즐겨찾기 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});",
+									"",
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"",
+									"",
+									"let routeUrl = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let routeUploadBody = routeFavorite.uploadBody;",
+									"routeUploadBody.minNo = pm.variables.get('minNo_personal');",
+									"routeUploadBody.userKey = pm.variables.get('userKey_personal');",
+									"pm.sendRequest({",
+									"    url: routeUrl,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(routeUploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 경로 즐겨찾기 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});",
+									"",
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let poiRecentUrl = pm.variables.get(\"host\") + poiRecent.uploadUri;",
+									"let poiRecentBody = poiRecent.uploadBody;",
+									"poiRecentBody.minNo = pm.variables.get('minNo_personal');",
+									"poiRecentBody.userKey = pm.variables.get('userKey_personal');",
+									"pm.sendRequest({",
+									"    url: poiRecentUrl, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiRecentBody)",
+									"}, function (err, res) {",
+									"   pm.test('Pre] 최근길 데이터 사전 등록', () => pm.expect(res).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "459c5fd1-a757-4154-b74f-b3d7265178ee",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"최근길 정보 조회 확인\"] = resultBody.poiRecentDtos;",
+									"",
+									"tests[\"poi 즐겨찾기 정보 조회 확인\"] = resultBody.poiFavoriteDtos;",
+									"",
+									"tests[\"poi My 즐겨찾기 정보 조회 확인\"] = resultBody.poiMyFavoriteDto;",
+									"",
+									"tests[\"route 즐겨찾기 정보 조회 확인\"] = resultBody.routeFavoriteDtos;",
+									"",
+									"tests[\"route My 즐겨찾기 정보 조회 확인\"] = resultBody.routeMyFavoriteDto;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-data?userKey={{userKey_personal}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-data"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey_personal}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "08_01_02_최근길/즐겨찾기 데이터가 없는 경우에도 조회 성공",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71f59499-73ab-40f1-a0ef-8cdba3289516",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"let poiUrl = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let poiUploadBody = poiFavorite.uploadBody;",
+									"poiUploadBody.minNo = pm.variables.get('minNo_personal');",
+									"poiUploadBody.userKey = pm.variables.get('userKey_personal');",
+									"poiUploadBody.poiFavorites = [];",
+									"poiUploadBody.uploadOption = \"FI_MC\"",
+									"pm.sendRequest({",
+									"    url: poiUrl,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiUploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] POI 즐겨찾기 데이터 삭제', () => pm.expect(response).to.have.status(200));",
+									"});",
+									"",
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let routeUrl = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let routeUploadBody = routeFavorite.uploadBody;",
+									"routeUploadBody.minNo = pm.variables.get('minNo_personal');",
+									"routeUploadBody.userKey = pm.variables.get('userKey_personal');",
+									"routeUploadBody.routeFavoriteRegistDtos = [];",
+									"routeUploadBody.uploadOption = \"FI_MC\"",
+									"pm.sendRequest({",
+									"    url: routeUrl,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(routeUploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 경로 즐겨찾기 데이터 삭제', () => pm.expect(response).to.have.status(200));",
+									"});",
+									"",
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let poiRecentUrl = pm.variables.get(\"host\") + poiRecent.uploadUri;",
+									"let poiRecentBody = poiRecent.uploadBody;",
+									"poiRecentBody.minNo = pm.variables.get('minNo_personal');",
+									"poiRecentBody.userKey = pm.variables.get('userKey_personal');",
+									"poiRecentBody.poiRecentUploads = [];",
+									"pm.sendRequest({",
+									"    url: poiRecentUrl, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiRecentBody)",
+									"}, function (err, res) {",
+									"   pm.test('Pre] 최근길 데이터 삭제', () => pm.expect(res).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "459c5fd1-a757-4154-b74f-b3d7265178ee",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"최근길 정보 조회 확인\"] = resultBody.poiRecentDtos.length === 0;",
+									"",
+									"tests[\"poi 즐겨찾기 정보 조회 확인\"] = resultBody.poiFavoriteDtos.length === 0;",
+									"",
+									"tests[\"poi My 즐겨찾기 정보 조회 확인\"] = resultBody.poiMyFavoriteDto.homePoiId === null & resultBody.poiMyFavoriteDto.officePoiId === null;",
+									"",
+									"tests[\"route 즐겨찾기 정보 조회 확인\"] = resultBody.routeFavoriteDtos.length === 0;",
+									"",
+									"tests[\"route My 즐겨찾기 정보 조회 확인\"] = resultBody.routeMyFavoriteDto.startRouteDto === null & resultBody.routeMyFavoriteDto.endRouteDto === null ;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-data?userKey={{userKey_personal}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-data"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey_personal}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "08_02_집/회사 정보 조회",
+			"item": [
+				{
+					"name": "05_05_02_01_집 정보만 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"결과 리스트 있음\"] = resultBody.poiSearches && resultBody.poiSearches.length > 0;",
+									"",
+									"const home = _.find(resultBody.poiSearches, {'dbKind': 'H'});",
+									"const office = _.find(resultBody.poiSearches, {'dbKind': 'O'});",
+									"",
+									"tests[\"집 정보 있음\"] = home && home.name && home.navX1 && home.navY1;",
+									"",
+									"tests[\"회사 정보 없음\"] = office == null;",
+									"",
+									"tests[\"radius 값 확인\"] = home.radius && home.radius != '0';"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e509175-42f5-42da-827d-d8267f36df5c",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 집/회사 데이터 사전 등록",
+									"let url = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let uploadBody = poiFavorite.uploadBody;",
+									"uploadBody.minNo = pm.variables.get('minNo');",
+									"uploadBody.userKey = pm.variables.get('userKey');",
+									"uploadBody.uploadOption = 'MS';",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 집/회사 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/home-office-info?userKey={{userKey}}&reqCnt=1&findOption=H&noorX=4571653&noorY=1352256",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"home-office-info"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "reqCnt",
+									"value": "1"
+								},
+								{
+									"key": "findOption",
+									"value": "H"
+								},
+								{
+									"key": "noorX",
+									"value": "4571653"
+								},
+								{
+									"key": "noorY",
+									"value": "1352256"
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "05_05_02_02_회사 정보만 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"결과 리스트 있음\"] = resultBody.poiSearches && resultBody.poiSearches.length > 0;",
+									"",
+									"const home = _.find(resultBody.poiSearches, {'dbKind': 'H'});",
+									"const office = _.find(resultBody.poiSearches, {'dbKind': 'O'});",
+									"",
+									"tests[\"집 정보 없음\"] = home == null;",
+									"",
+									"tests[\"회사 정보 있음\"] = office && office.name && office.navX1 && office.navY1;",
+									"",
+									"tests[\"radius 값 확인\"] = office.radius && office.radius != '0';"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e509175-42f5-42da-827d-d8267f36df5c",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 집/회사 데이터 사전 등록",
+									"let url = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let uploadBody = poiFavorite.uploadBody;",
+									"uploadBody.minNo = pm.variables.get('minNo');",
+									"uploadBody.userKey = pm.variables.get('userKey');",
+									"uploadBody.uploadOption = 'MS';",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 집/회사 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/home-office-info?userKey={{userKey}}&reqCnt=1&findOption=O&noorX=4571653&noorY=1392256",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"home-office-info"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "reqCnt",
+									"value": "1"
+								},
+								{
+									"key": "findOption",
+									"value": "O"
+								},
+								{
+									"key": "noorX",
+									"value": "4571653"
+								},
+								{
+									"key": "noorY",
+									"value": "1392256"
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "05_05_02_03_등록된 데이터 없을때 조회 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code === 'POI04001R';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode === 'NULLRESULT_ERROR';",
+									"tests[\"결과 리스트 없음\"] = resultBody.poiSearches == null;",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e509175-42f5-42da-827d-d8267f36df5c",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 집/회사 데이터 삭제",
+									"let url = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let uploadBody = poiFavorite.uploadBody;",
+									"uploadBody.minNo = pm.variables.get('minNo');",
+									"uploadBody.userKey = pm.variables.get('userKey');",
+									"uploadBody.uploadOption = 'MC';",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 집/회사 데이터 삭제', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/home-office-info?userKey={{userKey}}&reqCnt=1&findOption=H&noorX=4571653&noorY=1392256",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"home-office-info"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "reqCnt",
+									"value": "1"
+								},
+								{
+									"key": "findOption",
+									"value": "H"
+								},
+								{
+									"key": "noorX",
+									"value": "4571653"
+								},
+								{
+									"key": "noorY",
+									"value": "1392256"
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b5dfeaf7-9b15-495e-bf15-18af706e5291",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "35346ba0-f4eb-40ae-875f-89abe57ed2ab",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "08_03_개인화 검색",
+			"item": [
+				{
+					"name": "08_03_01_개인화 검색 1글자 검색 조회(equals) 성공",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71f59499-73ab-40f1-a0ef-8cdba3289516",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"const name = \"강\";",
+									"const noorX = \"4571041\";",
+									"const noorY = \"1352921\";",
+									"",
+									"let poiUrl = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let poiUploadBody = poiFavorite.uploadBody;",
+									"poiUploadBody.minNo = pm.variables.get('minNo_personal');",
+									"poiUploadBody.userKey = pm.variables.get('userKey_personal');",
+									"poiUploadBody.poiFavorites[0].custName = name;",
+									"poiUploadBody.poiFavorites[0].noorX = noorX;",
+									"poiUploadBody.poiFavorites[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiUrl,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiUploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] POI 즐겨찾기 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});",
+									"",
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let poiRecentUrl = pm.variables.get(\"host\") + poiRecent.uploadUri;",
+									"let poiRecentBody = poiRecent.uploadBody;",
+									"poiRecentBody.minNo = pm.variables.get('minNo_personal');",
+									"poiRecentBody.userKey = pm.variables.get('userKey_personal');",
+									"poiRecentBody.poiRecentUploads[0].custName = name;",
+									"poiRecentBody.poiRecentUploads[0].noorX = noorX;",
+									"poiRecentBody.poiRecentUploads[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiRecentUrl, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiRecentBody)",
+									"}, function (err, res) {",
+									"   pm.test('Pre] 최근길 데이터 사전 등록', () => pm.expect(res).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "459c5fd1-a757-4154-b74f-b3d7265178ee",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"poiSearches 확인\"] = resultBody.poiSearches;",
+									"",
+									"tests[\"dbKind 확인\"] = resultBody.poiSearches[0].dbKind === \"F\";",
+									"",
+									"tests[\"name 확인\"] = resultBody.poiSearches[0].name === \"강\";",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-profile?userKey={{userKey_personal}}&name=강&noorX=4571041&noorY=1352921&reqCnt=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-profile"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey_personal}}"
+								},
+								{
+									"key": "name",
+									"value": "강"
+								},
+								{
+									"key": "noorX",
+									"value": "4571041"
+								},
+								{
+									"key": "noorY",
+									"value": "1352921"
+								},
+								{
+									"key": "reqCnt",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "08_03_02_개인화 검색 1글자 검색 조회(equals) 실패",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71f59499-73ab-40f1-a0ef-8cdba3289516",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"const name = \"강남역\";",
+									"const noorX = \"4571041\";",
+									"const noorY = \"1352921\";",
+									"",
+									"let poiUrl = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let poiUploadBody = poiFavorite.uploadBody;",
+									"poiUploadBody.minNo = pm.variables.get('minNo_personal');",
+									"poiUploadBody.userKey = pm.variables.get('userKey_personal');",
+									"poiUploadBody.poiFavorites[0].custName = name;",
+									"poiUploadBody.poiFavorites[0].noorX = noorX;",
+									"poiUploadBody.poiFavorites[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiUrl,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiUploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] POI 즐겨찾기 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});",
+									"",
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let poiRecentUrl = pm.variables.get(\"host\") + poiRecent.uploadUri;",
+									"let poiRecentBody = poiRecent.uploadBody;",
+									"poiRecentBody.minNo = pm.variables.get('minNo_personal');",
+									"poiRecentBody.userKey = pm.variables.get('userKey_personal');",
+									"poiRecentBody.poiRecentUploads[0].custName = name;",
+									"poiRecentBody.poiRecentUploads[0].noorX = noorX;",
+									"poiRecentBody.poiRecentUploads[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiRecentUrl, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiRecentBody)",
+									"}, function (err, res) {",
+									"   pm.test('Pre] 최근길 데이터 사전 등록', () => pm.expect(res).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "459c5fd1-a757-4154-b74f-b3d7265178ee",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code === 'POI04001R';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode === 'NULLRESULT_ERROR';",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-profile?userKey={{userKey_personal}}&name=강&noorX=4571041&noorY=1352921&reqCnt=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-profile"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey_personal}}"
+								},
+								{
+									"key": "name",
+									"value": "강"
+								},
+								{
+									"key": "noorX",
+									"value": "4571041"
+								},
+								{
+									"key": "noorY",
+									"value": "1352921"
+								},
+								{
+									"key": "reqCnt",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "08_03_03_개인화 검색 3글자 검색 조회(startsWith) 성공",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71f59499-73ab-40f1-a0ef-8cdba3289516",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"const name = \"강남역5번\";",
+									"const noorX = \"4571041\";",
+									"const noorY = \"1352921\";",
+									"",
+									"let poiUrl = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let poiUploadBody = poiFavorite.uploadBody;",
+									"poiUploadBody.minNo = pm.variables.get('minNo_personal');",
+									"poiUploadBody.userKey = pm.variables.get('userKey_personal');",
+									"poiUploadBody.poiFavorites[0].custName = name;",
+									"poiUploadBody.poiFavorites[0].noorX = noorX;",
+									"poiUploadBody.poiFavorites[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiUrl,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiUploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] POI 즐겨찾기 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});",
+									"",
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let poiRecentUrl = pm.variables.get(\"host\") + poiRecent.uploadUri;",
+									"let poiRecentBody = poiRecent.uploadBody;",
+									"poiRecentBody.minNo = pm.variables.get('minNo_personal');",
+									"poiRecentBody.userKey = pm.variables.get('userKey_personal');",
+									"poiRecentBody.poiRecentUploads[0].custName = name;",
+									"poiRecentBody.poiRecentUploads[0].noorX = noorX;",
+									"poiRecentBody.poiRecentUploads[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiRecentUrl, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiRecentBody)",
+									"}, function (err, res) {",
+									"   pm.test('Pre] 최근길 데이터 사전 등록', () => pm.expect(res).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "459c5fd1-a757-4154-b74f-b3d7265178ee",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"poiSearches 확인\"] = resultBody.poiSearches;",
+									"",
+									"tests[\"dbKind 확인\"] = resultBody.poiSearches[0].dbKind === \"F\";",
+									"",
+									"tests[\"name 확인\"] = resultBody.poiSearches[0].name === \"강남역5번\";",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-profile?userKey={{userKey_personal}}&name=강남역&noorX=4571041&noorY=1352921&reqCnt=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-profile"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey_personal}}"
+								},
+								{
+									"key": "name",
+									"value": "강남역"
+								},
+								{
+									"key": "noorX",
+									"value": "4571041"
+								},
+								{
+									"key": "noorY",
+									"value": "1352921"
+								},
+								{
+									"key": "reqCnt",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "08_03_04_개인화 검색 3글자 검색 조회(startsWith) 실패",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71f59499-73ab-40f1-a0ef-8cdba3289516",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"const name = \"5번강남역\";",
+									"const noorX = \"4571041\";",
+									"const noorY = \"1352921\";",
+									"",
+									"let poiUrl = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let poiUploadBody = poiFavorite.uploadBody;",
+									"poiUploadBody.minNo = pm.variables.get('minNo_personal');",
+									"poiUploadBody.userKey = pm.variables.get('userKey_personal');",
+									"poiUploadBody.poiFavorites[0].custName = name;",
+									"poiUploadBody.poiFavorites[0].noorX = noorX;",
+									"poiUploadBody.poiFavorites[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiUrl,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiUploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] POI 즐겨찾기 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});",
+									"",
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let poiRecentUrl = pm.variables.get(\"host\") + poiRecent.uploadUri;",
+									"let poiRecentBody = poiRecent.uploadBody;",
+									"poiRecentBody.minNo = pm.variables.get('minNo_personal');",
+									"poiRecentBody.userKey = pm.variables.get('userKey_personal');",
+									"poiRecentBody.poiRecentUploads[0].custName = name;",
+									"poiRecentBody.poiRecentUploads[0].noorX = noorX;",
+									"poiRecentBody.poiRecentUploads[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiRecentUrl, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiRecentBody)",
+									"}, function (err, res) {",
+									"   pm.test('Pre] 최근길 데이터 사전 등록', () => pm.expect(res).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "459c5fd1-a757-4154-b74f-b3d7265178ee",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code === 'POI04001R';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode === 'NULLRESULT_ERROR';",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-profile?userKey={{userKey_personal}}&name=강남역&noorX=4571041&noorY=1352921&reqCnt=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-profile"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey_personal}}"
+								},
+								{
+									"key": "name",
+									"value": "강남역"
+								},
+								{
+									"key": "noorX",
+									"value": "4571041"
+								},
+								{
+									"key": "noorY",
+									"value": "1352921"
+								},
+								{
+									"key": "reqCnt",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "08_03_05_개인화 검색 7글자 검색 조회(contains) 성공",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71f59499-73ab-40f1-a0ef-8cdba3289516",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"const name = \"강남역5번출구입니다\";",
+									"const noorX = \"4571041\";",
+									"const noorY = \"1352921\";",
+									"",
+									"let poiUrl = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let poiUploadBody = poiFavorite.uploadBody;",
+									"poiUploadBody.minNo = pm.variables.get('minNo_personal');",
+									"poiUploadBody.userKey = pm.variables.get('userKey_personal');",
+									"poiUploadBody.poiFavorites[0].custName = name;",
+									"poiUploadBody.poiFavorites[0].noorX = noorX;",
+									"poiUploadBody.poiFavorites[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiUrl,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiUploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] POI 즐겨찾기 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});",
+									"",
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let poiRecentUrl = pm.variables.get(\"host\") + poiRecent.uploadUri;",
+									"let poiRecentBody = poiRecent.uploadBody;",
+									"poiRecentBody.minNo = pm.variables.get('minNo_personal');",
+									"poiRecentBody.userKey = pm.variables.get('userKey_personal');",
+									"poiRecentBody.poiRecentUploads[0].custName = name;",
+									"poiRecentBody.poiRecentUploads[0].noorX = noorX;",
+									"poiRecentBody.poiRecentUploads[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiRecentUrl, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiRecentBody)",
+									"}, function (err, res) {",
+									"   pm.test('Pre] 최근길 데이터 사전 등록', () => pm.expect(res).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "459c5fd1-a757-4154-b74f-b3d7265178ee",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"poiSearches 확인\"] = resultBody.poiSearches;",
+									"",
+									"tests[\"dbKind 확인\"] = resultBody.poiSearches[0].dbKind === \"F\";",
+									"",
+									"tests[\"name 확인\"] = resultBody.poiSearches[0].name === \"강남역5번출구입니다\";",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-profile?userKey={{userKey_personal}}&name=강남역5번출구&noorX=4571041&noorY=1352921&reqCnt=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-profile"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey_personal}}"
+								},
+								{
+									"key": "name",
+									"value": "강남역5번출구"
+								},
+								{
+									"key": "noorX",
+									"value": "4571041"
+								},
+								{
+									"key": "noorY",
+									"value": "1352921"
+								},
+								{
+									"key": "reqCnt",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "08_03_06_개인화 검색 7글자 검색 조회(contains) 성공",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71f59499-73ab-40f1-a0ef-8cdba3289516",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"const name = \"앞에불라불라강남역5번출구\";",
+									"const noorX = \"4571041\";",
+									"const noorY = \"1352921\";",
+									"",
+									"let poiUrl = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let poiUploadBody = poiFavorite.uploadBody;",
+									"poiUploadBody.minNo = pm.variables.get('minNo_personal');",
+									"poiUploadBody.userKey = pm.variables.get('userKey_personal');",
+									"poiUploadBody.poiFavorites[0].custName = name;",
+									"poiUploadBody.poiFavorites[0].noorX = noorX;",
+									"poiUploadBody.poiFavorites[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiUrl,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiUploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] POI 즐겨찾기 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});",
+									"",
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let poiRecentUrl = pm.variables.get(\"host\") + poiRecent.uploadUri;",
+									"let poiRecentBody = poiRecent.uploadBody;",
+									"poiRecentBody.minNo = pm.variables.get('minNo_personal');",
+									"poiRecentBody.userKey = pm.variables.get('userKey_personal');",
+									"poiRecentBody.poiRecentUploads[0].custName = name;",
+									"poiRecentBody.poiRecentUploads[0].noorX = noorX;",
+									"poiRecentBody.poiRecentUploads[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiRecentUrl, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiRecentBody)",
+									"}, function (err, res) {",
+									"   pm.test('Pre] 최근길 데이터 사전 등록', () => pm.expect(res).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "459c5fd1-a757-4154-b74f-b3d7265178ee",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"poiSearches 확인\"] = resultBody.poiSearches;",
+									"",
+									"tests[\"dbKind 확인\"] = resultBody.poiSearches[0].dbKind === \"F\";",
+									"",
+									"tests[\"name 확인\"] = resultBody.poiSearches[0].name === \"앞에불라불라강남역5번출구\";",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-profile?userKey={{userKey_personal}}&name=강남역5번출구&noorX=4571041&noorY=1352921&reqCnt=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-profile"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey_personal}}"
+								},
+								{
+									"key": "name",
+									"value": "강남역5번출구"
+								},
+								{
+									"key": "noorX",
+									"value": "4571041"
+								},
+								{
+									"key": "noorY",
+									"value": "1352921"
+								},
+								{
+									"key": "reqCnt",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "08_03_07_개인화 검색 최근길정보로 검색 성공",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71f59499-73ab-40f1-a0ef-8cdba3289516",
+								"exec": [
+									"let poiFavorite = eval(globals.poiFavorite)();",
+									"const name = \"강남역5번출구\";",
+									"const noorX = \"4571041\";",
+									"const noorY = \"1352921\";",
+									"",
+									"let poiUrl = pm.variables.get('host') + poiFavorite.uploadUri;",
+									"let poiUploadBody = poiFavorite.uploadBody;",
+									"poiUploadBody.minNo = pm.variables.get('minNo_personal');",
+									"poiUploadBody.userKey = pm.variables.get('userKey_personal');",
+									"poiUploadBody.poiFavorites = [];",
+									"pm.sendRequest({",
+									"    url: poiUrl,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiUploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] POI 즐겨찾기 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});",
+									"",
+									"",
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let poiRecentUrl = pm.variables.get(\"host\") + poiRecent.uploadUri;",
+									"let poiRecentBody = poiRecent.uploadBody;",
+									"poiRecentBody.minNo = pm.variables.get('minNo_personal');",
+									"poiRecentBody.userKey = pm.variables.get('userKey_personal');",
+									"poiRecentBody.poiRecentUploads[0].custName = name;",
+									"poiRecentBody.poiRecentUploads[0].noorX = noorX;",
+									"poiRecentBody.poiRecentUploads[0].noorY = noorY;",
+									"pm.sendRequest({",
+									"    url: poiRecentUrl, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(poiRecentBody)",
+									"}, function (err, res) {",
+									"   pm.test('Pre] 최근길 데이터 사전 등록', () => pm.expect(res).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "459c5fd1-a757-4154-b74f-b3d7265178ee",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"poiSearches 확인\"] = resultBody.poiSearches;",
+									"",
+									"tests[\"dbKind 확인\"] = resultBody.poiSearches[0].dbKind === \"D\";",
+									"",
+									"tests[\"name 확인\"] = resultBody.poiSearches[0].name === \"강남역5번출구\";",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/user-profile?userKey={{userKey_personal}}&name=강남역&noorX=4571041&noorY=1352921&reqCnt=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user-profile"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey_personal}}"
+								},
+								{
+									"key": "name",
+									"value": "강남역"
+								},
+								{
+									"key": "noorX",
+									"value": "4571041"
+								},
+								{
+									"key": "noorY",
+									"value": "1352921"
+								},
+								{
+									"key": "reqCnt",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "c0e7d798-e974-4eb6-8d96-b955c2f8509c",
+				"type": "text/javascript",
+				"exec": [
+					"postman.setGlobalVariable('poiFavorite', () => {",
+					"    return {",
+					"        \"uri\": \"/api/v1/poi-favorite\",",
+					"        \"uploadUri\": \"/api/v1/poi-favorite/upload\",",
+					"        \"registBody\": {",
+					"            \"minNo\": \"{{minNo}}\",",
+					"            \"userKey\": \"{{userKey}}\",",
+					"            \"poiFavorites\": [",
+					"                {",
+					"                    \"addInfo\": null,",
+					"                    \"custName\": \"파인애비뉴\",",
+					"                    \"iconInfo\": \"/별/\",",
+					"                    \"insDatetime\": null,",
+					"                    \"navSeq\": \"0\",",
+					"                    \"noorX\": \"4571653\",",
+					"                    \"noorY\": \"1352256\",",
+					"                    \"orgCustName\": \"\",",
+					"                    \"poiId\": 2786471,",
+					"                    \"rpFlag\": 17",
+					"                }",
+					"            ]",
+					"        },",
+					"        \"uploadBody\": {",
+					"            \"minNo\": \"{{minNo}}\",",
+					"            \"userKey\": \"{{userKey}}\",",
+					"            \"uploadOption\": \"FI_MS\",",
+					"            \"poiFavorites\": [",
+					"                {",
+					"                    \"addInfo\": null,",
+					"                    \"custName\": \"파인애비뉴\",",
+					"                    \"iconInfo\": \"/별/\",",
+					"                    \"insDatetime\": null,",
+					"                    \"navSeq\": \"0\",",
+					"                    \"noorX\": \"4571653\",",
+					"                    \"noorY\": \"1352256\",",
+					"                    \"orgCustName\": \"\",",
+					"                    \"poiId\": 2786471,",
+					"                    \"rpFlag\": 17",
+					"                }",
+					"            ],",
+					"            \"poiMyFavorite\": {",
+					"                \"homeAddInfo\": null,",
+					"                \"homeCustName\": \"신금호파크자이\",",
+					"                \"homeNavSeq\": \"0\",",
+					"                \"homeNoorX\": 4572788,",
+					"                \"homeNoorY\": 1351920,",
+					"                \"homePoiId\": 6092066,",
+					"                \"homeRpFlag\": 16,",
+					"                \"officeAddInfo\": null,",
+					"                \"officeCustName\": \"파인애비뉴\",",
+					"                \"officeNavSeq\": \"0\",",
+					"                \"officeNoorX\": 4571653,",
+					"                \"officeNoorY\": 1352256,",
+					"                \"officePoiId\": 2786471,",
+					"                \"officeRpFlag\": 17",
+					"            }",
+					"        },",
+					"        \"removeBody\": {",
+					"            \"minNo\": \"{{minNo}}\",",
+					"            \"userKey\": \"{{userKey}}\",",
+					"            \"poiFavorites\": [",
+					"                {",
+					"                    \"custName\": \"파인애비뉴\",",
+					"                    \"noorX\": \"4571653\",",
+					"                    \"noorY\": \"1352256\"",
+					"                },",
+					"                {",
+					"                    \"custName\": \"SK남산빌딩\",",
+					"                    \"noorX\": \"4571201\",",
+					"                    \"noorY\": \"1351937\"",
+					"                }",
+					"            ]",
+					"        },",
+					"        \"modifyBody\": {",
+					"            \"minNo\": \"{{minNo}}\",",
+					"            \"userKey\": \"{{userKey}}\",",
+					"            \"poiFavorite\": {",
+					"                \"custName\": \"파인애비뉴\",",
+					"                \"iconInfo\": \"/하트/\",",
+					"                \"newCustName\": \"을지로3가 파인애비뉴\",",
+					"                \"noorX\": \"4571653\",",
+					"                \"noorY\": \"1352256\"",
+					"            }",
+					"        }",
+					"    }",
+					"});",
+					"",
+					"postman.setGlobalVariable('routeFavorite', () => {",
+					"    return {",
+					"        uri: \"/api/v1/route-favorite\",",
+					"        uploadUri: \"/api/v1/route-favorite/upload\",",
+					"        registBody: {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"userKey\": \"{{userKey}}\",",
+					"          \"routeFavoriteRegistDtos\": [",
+					"            {",
+					"              \"routeTitle\": \"첫번째 경로\",",
+					"              \"startRouteDto\": {",
+					"                \"name\": \"파인애비뉴\",",
+					"                \"navX\": \"4571653\",",
+					"                \"navY\": \"1352256\",",
+					"                \"poiId\": \"2786471\",",
+					"                \"rpFlag\": 17",
+					"              },",
+					"              \"midRouteDtos\": [",
+					"              \t{",
+					"                \t\"name\": \"왕십리 이마트점\",",
+					"                    \"navX\": \"4573465\",",
+					"                    \"navY\": \"1352064\",",
+					"                    \"poiId\": \"1551025\",",
+					"                    \"rpFlag\": 8\t",
+					"            \t}",
+					"              ],",
+					"              \"endRouteDto\": {",
+					"                \"name\": \"천호역[8호선]\",",
+					"                \"navX\": \"4576526\",",
+					"                \"navY\": \"1351314\",",
+					"                \"poiId\": \"280407\",",
+					"                \"rpFlag\": 5",
+					"              }",
+					"            }",
+					"          ]",
+					"        },",
+					"        removeBody: {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"userKey\": \"{{userKey}}\",",
+					"          \"routeFavoriteRegistDtos\": [",
+					"            {",
+					"              \"routeTitle\": \"첫번째 경로\",",
+					"              \"startRouteDto\": {",
+					"                \"name\": \"파인애비뉴\",",
+					"                \"navX\": \"4571653\",",
+					"                \"navY\": \"1352256\",",
+					"                \"poiId\": \"2786471\",",
+					"                \"rpFlag\": 17",
+					"              },",
+					"              \"midRouteDtos\": [",
+					"              \t{",
+					"                \t\"name\": \"왕십리 이마트점\",",
+					"                    \"navX\": \"4573465\",",
+					"                    \"navY\": \"1352064\",",
+					"                    \"poiId\": \"1551025\",",
+					"                    \"rpFlag\": 8\t",
+					"            \t}",
+					"              ],",
+					"              \"endRouteDto\": {",
+					"                \"name\": \"천호역[8호선]\",",
+					"                \"navX\": \"4576526\",",
+					"                \"navY\": \"1351314\",",
+					"                \"poiId\": \"280407\",",
+					"                \"rpFlag\": 5",
+					"              }",
+					"            }",
+					"          ]",
+					"        },",
+					"        uploadBody: {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"userKey\": \"{{userKey}}\",",
+					"          \"routeFavoriteRegistDtos\": [",
+					"            {",
+					"              \"routeTitle\": \"첫번째 경로\",",
+					"              \"startRouteDto\": {",
+					"                \"name\": \"파인애비뉴\",",
+					"                \"navX\": \"4571653\",",
+					"                \"navY\": \"1352256\",",
+					"                \"poiId\": \"2786471\",",
+					"                \"rpFlag\": 17",
+					"              },",
+					"              \"midRouteDtos\": [",
+					"              \t{",
+					"                \t\"name\": \"왕십리 이마트점\",",
+					"                    \"navX\": \"4573465\",",
+					"                    \"navY\": \"1352064\",",
+					"                    \"poiId\": \"1551025\",",
+					"                    \"rpFlag\": 8\t",
+					"            \t}",
+					"              ],",
+					"              \"endRouteDto\": {",
+					"                \"name\": \"천호역[8호선]\",",
+					"                \"navX\": \"4576526\",",
+					"                \"navY\": \"1351314\",",
+					"                \"poiId\": \"280407\",",
+					"                \"rpFlag\": 5",
+					"              }",
+					"            }",
+					"          ],",
+					"          \"routeMyFavoriteRegistDto\": {",
+					"              \"routeTitle\": \"즐겨찾는 경로\",",
+					"              \"startRouteDto\": {",
+					"                \"name\": \"경기도 고양시 덕양구 관산동\",",
+					"                \"navX\": \"4567288\",",
+					"                \"navY\": \"1357906\",",
+					"                \"poiId\": null,",
+					"                \"rpFlag\": 0",
+					"              },",
+					"              \"endRouteDto\": {",
+					"                \"name\": \"월곶풍림아이원1차아파트\",",
+					"                \"navX\": \"4562665\",",
+					"                \"navY\": \"1345941\",",
+					"                \"poiId\": \"719365\",",
+					"                \"rpFlag\": 0",
+					"              },",
+					"              \"midRouteDto1\": {",
+					"                  \"name\": \"경유지1\",",
+					"                  \"navX\": \"4562665\",",
+					"                  \"navY\": \"1345941\",",
+					"                  \"poiId\": \"719365\",",
+					"                  \"rpFlag\": 0",
+					"              },",
+					"              \"midRouteDto2\": {",
+					"                  \"name\": \"경유지2\",",
+					"                  \"navX\": \"4562665\",",
+					"                  \"navY\": \"1345941\",",
+					"                  \"poiId\": \"719365\",",
+					"                  \"rpFlag\": 0",
+					"              }",
+					"          },",
+					"          \"uploadOption\": \"FI_MS\"",
+					"        }",
+					"    }",
+					"});",
+					"",
+					"postman.setGlobalVariable('poiRecent', () => {",
+					"    return {",
+					"        \"uri\": \"/api/v1/poi-recent-destination\",",
+					"        \"uploadUri\": \"/api/v1/poi-recent-destination/upload\",",
+					"        \"registBody\": {",
+					"          \"custName\": \"강남역5\",",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"navSeq\": 0,",
+					"          \"noorX\": 4571041,",
+					"          \"noorY\": 1352921,",
+					"          \"poiId\": 432108,",
+					"          \"rpFlag\": 16,",
+					"          \"userKey\": \"{{userKey}}\"",
+					"        },",
+					"        \"uploadBody\": {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"poiRecentUploads\": [",
+					"            {",
+					"              \"custName\": \"강남역5\",",
+					"              \"fixedIndex\": 1,",
+					"              \"navSeq\": 0,",
+					"              \"noorX\": 4571041,",
+					"              \"noorY\": 1352921,",
+					"              \"poiId\": 432108,",
+					"              \"rpFlag\": 16,",
+					"              \"svcDate\": 20190705114015,",
+					"              \"totalCnt\": 0",
+					"            }",
+					"          ],",
+					"          \"svcUploadYn\": \"N\",",
+					"          \"userKey\": \"{{userKey}}\"",
+					"        },",
+					"        \"removeBody\": {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"poiRecentUploads\": [",
+					"            {",
+					"              \"custName\": \"강남역5\",",
+					"              \"noorX\": 4571041,",
+					"              \"noorY\": 1352921",
+					"            }",
+					"          ],",
+					"          \"userKey\": \"{{userKey}}\"",
+					"        },",
+					"        \"modifyBody\": {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"poiRecentUploads\": [",
+					"            {",
+					"              \"custName\": \"강남역5\",",
+					"              \"fixedIndex\": 1,",
+					"              \"noorX\": 4571041,",
+					"              \"noorY\": 1352921",
+					"            }",
+					"          ],",
+					"          \"userKey\": \"{{userKey}}\"",
+					"        }",
+					"    }",
+					"});",
+					"",
+					"postman.setGlobalVariable('utils', () => {",
+					"    let getHeader = () => {",
+					"      return {",
+					"        'chcode': pm.variables.get('chcode'),",
+					"        'cp_channel.apcode': pm.variables.get('cp_channel.apcode'),",
+					"        'cp_channel.ostype': pm.variables.get('cp_channel.ostype'),",
+					"        'tid': pm.variables.get('tid'),",
+					"        'content-type': 'application/json'",
+					"      };",
+					"    };",
+					"    ",
+					"    return {",
+					"        getHeader: getHeader",
+					"    }",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "ee7c1b41-05d0-4167-9ea8-9b58c6ef4a37",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

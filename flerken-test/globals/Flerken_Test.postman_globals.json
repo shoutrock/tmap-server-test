@@ -1,0 +1,239 @@
+{
+	"id": "97533d1b-df03-49db-8783-dcfef310290b",
+	"values": [
+		{
+			"key": "getHeader",
+			"value": "()=>{ \n    let header = {\n        'chcode':pm.environment.get(\"chcode\"),\n        'cp_channel.apcode':pm.environment.get(\"cp_channel.apcode\"),\n        'cp_channel.ostype':pm.environment.get(\"cp_channel.ostype\"),\n        'tid':pm.environment.get(\"tid\"),\n        'Content-Type':'application/json'\n    };\n    return header; \n}",
+			"enabled": true
+		},
+		{
+			"key": "reqTime",
+			"value": "{{$timestamp}}",
+			"enabled": true
+		},
+		{
+			"key": "chcode",
+			"value": "tmap",
+			"enabled": true
+		},
+		{
+			"key": "cp_channel.apcode",
+			"value": "TMAP",
+			"enabled": true
+		},
+		{
+			"key": "cp_channel.ostype",
+			"value": "AND",
+			"enabled": true
+		},
+		{
+			"key": "tid",
+			"value": "testSessionId001",
+			"enabled": true
+		},
+		{
+			"key": "utils",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "minNo",
+			"value": "99810000000",
+			"enabled": true
+		},
+		{
+			"key": "userKey",
+			"value": "2019AMG0313_957B290B03FC4B2EE05315701BAC3DAF",
+			"enabled": true
+		},
+		{
+			"key": "minNo_provision_2",
+			"value": "99810000003",
+			"enabled": true
+		},
+		{
+			"key": "userKey_provision_1",
+			"value": "2019AMG0332_957B63E83118A0BAE05315701BAC5E81",
+			"enabled": true
+		},
+		{
+			"key": "minNo_provision_1",
+			"value": "99810000002",
+			"enabled": true
+		},
+		{
+			"key": "userKey_personal",
+			"value": "2019AMG0326_957B4121A5B75D10E05315701BAC3F73",
+			"enabled": true
+		},
+		{
+			"key": "minNo_personal",
+			"value": "99810000001",
+			"enabled": true
+		},
+		{
+			"key": "userKey_provision_2",
+			"value": "2019AMG0337_957B18B9F29C26B3E05315701BAC8655",
+			"enabled": true
+		},
+		{
+			"key": "minNo_exceedTest",
+			"value": "99810000019",
+			"enabled": true
+		},
+		{
+			"key": "userKey_exceedTest",
+			"value": "2019AMG0508_957B4D4C4ADC858CE05315701BAC0AAE",
+			"enabled": true
+		},
+		{
+			"key": "routeFavorite",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "poiFavorite",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "poiRecent",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "carInfo",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "checkDataTransfer",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "oilDcJoinInfo",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "personalInfo",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "publicTrafficFavorite",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "sendToCarInfo",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "doCompareWithRule",
+			"value": "(obj1, obj2)=>\n{\n    \n    let retObj = {};\n    retObj.result = true;\n    retObj.messages = [];\n    let emptyFiled = [];\n    let diffValFiled = [];\n    let diffTypeFiled = [];\n    let ignoreFiled = ['lastUpdateDatetime',  'insDatetime', 'svcDate'];\n\n    // 모두 null 인경우 true 리턴     \n    if(obj1===null && obj2===null){\n        return retObj;\n    }\n    \n    // 둘중 하나만 null인경우 false 리턴 \n    if( (obj1===null && obj2!==null) || \n        (obj1!==null && obj2===null) ||\n        (obj1.length===0&&obj2.length>0 ) || \n        (obj1.length>0&&obj2.length===0 )){\n            \n        retObj.result = false;\n        return retObj;\n    }\n    \n    // 오브젝트에 필드를 하나씩 비교 \n    for( const key in obj1 ) {\n        // 필드가 없는게 있는가?\n        if(typeof(obj2[key]) == \"undefined\"){\n            emptyFiled.add(key);\n        } else if(ignoreFiled.indexOf(key) > -1) {\n        \t//do nothing\n        } else if(typeof(obj1[key]) != typeof(obj2[key])){\n            diffTypeFiled.add(key);\n        } else if(key == 'navX1' || key == 'navY1') {\n            if(obj1[key] == '0') continue;\n        } else{\n            \n            // 값이 상이한게 있는가?\n            let val1 = obj1[key];\n            let val2 = obj2[key];\n\n            if(typeof(obj1[key]) == 'object'){\n                // object 비교\n                if(!eval(globals.doCompare)(val1, val2).result){\n                    diffValFiled.add(key + '('+val1+'-'+val2+')');\n                }\n                \n            }else{\n                // string, number 비교\n                if(!Object.is(val1, val2)){\n                \tif(key == 'radius') {\n                \t\tconst minValue = Number(val1) * 0.8;\n                \t\tconst maxValue = Number(val1) * 1.2;\n                \t\t\n                \t\tif(Number(val2) < minValue || maxValue < Number(val2)) {\n                \t\t\tdiffValFiled.add(key + '('+val1+'-'+val2+')');\n                \t\t}\n                \t} else if(key == 'hhPrice' || key == 'ggPrice' || key == 'llPrice' \n                \t    || key == 'highHhPrice' || key =='highGgPrice' || key == 'oilBaseSdt') {\n                \t   if((val1 != null && val2 != \"\") && (val2 == null || val2 == \"\")) {\n                \t\t\tdiffValFiled.add(key + '('+val1+'-'+val2+')');\n                \t\t}\n                \t} else if(key == 'dbKind' || key == 'highHhSale' || key =='highHhPrice' || key == 'asctCardYn'){\n                \t\tif(val2 == null || val2 == \"\") {\n                \t\t\tdiffValFiled.add(key + '('+val1+'-'+val2+')');\n                \t\t}\n                \t} else if(key == 'globalYn' || key == 'aoiYn'  || key == 'hotPlaceYn' \n                            || key == 'hotPlaceContainYn' || key == 'callCntTerm') {\n                      if(val2 == null || val2 == undefined || val2 == '') {\n                        diffValFiled.add(key + '('+val1+'-'+val2+')' );\n                      }\n                    } else if(key == 'info') {\n                      if(val1 && !val2) {\n                        diffValFiled.add(key + '('+val1+'-'+val2+')');\n                      }\n                    } else {\n                      diffValFiled.add(key + '('+val1+'-'+val2+')');\n                    }\n                }\n            }\n        }\n    } // end of for loop\n    \n    if(emptyFiled.length>0){\n        retObj.messages.add('emptyFiled exist ['+emptyFiled + ']');\n    }\n    \n    if(diffValFiled.length>0){\n        retObj.messages.add('diffValFiled exist ['+diffValFiled + ']');\n    }\n    \n    if(diffTypeFiled.length>0){\n        retObj.messages.add('diffTypeFiled exist ['+diffTypeFiled + ']');\n    }\n    \n    if(retObj.messages.length>0){\n        retObj.result = false;\n    }\n    \n    return retObj;\n}\n",
+			"enabled": true
+		},
+		{
+			"key": "resRest",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "resRmi",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "doCompare",
+			"value": "(obj1, obj2)=>\n{\n    \n    let retObj = {};\n    retObj.result = true;\n    retObj.messages = [];\n    let emptyFiled = [];\n    let diffValFiled = [];\n    let diffTypeFiled = [];\n    let ignoreFiled = ['lastUpdateDatetime', 'insDatetime', 'svcDate'];\n\n    // 모두 null 인경우 true 리턴     \n    if(obj1===null && obj2===null){\n        return retObj;\n    }\n    \n    // 둘중 하나만 null인경우 false 리턴 \n    if( (obj1===null && obj2!==null) || \n        (obj1!==null && obj2===null) ||\n        (obj1.length===0&&obj2.length>0 ) || \n        (obj1.length>0&&obj2.length===0 )){\n            \n        retObj.result = false;\n        return retObj;\n    }\n    \n    // 오브젝트에 필드를 하나씩 비교 \n    for( const key in obj1 ) {\n    \n        // 필드가 없는게 있는가?\n        if(typeof(obj2[key]) == \"undefined\"){\n            emptyFiled.add(key);\n        }else if(ignoreFiled.indexOf(key) > -1) {\n            //do nothing\n        }else if(typeof(obj1[key]) != typeof(obj2[key])){\n            diffTypeFiled.add(key);\n            \n        }else{\n            \n            // 값이 상이한게 있는가?\n            let val1 = obj1[key];\n            let val2 = obj2[key];\n        \n\t\t\tif(typeof(obj1[key]) == 'object'){\n                // object 비교\n                if(!eval(globals.doCompare)(val1, val2).result){\n                    diffValFiled.add(key + '('+val1+'-'+val2+')');\n                }\n                \n            }else{\n                // string, number 비교\n                if(!Object.is(val1, val2)){\n                    diffValFiled.add(key + '('+val1+'-'+val2+')');\n                }\n            }\n        }\n    } // end of for loop\n    \n    if(emptyFiled.length>0){\n        retObj.messages.add('emptyFiled exist ['+emptyFiled + ']');\n    }\n    \n    if(diffValFiled.length>0){\n        retObj.messages.add('diffValFiled exist ['+diffValFiled + ']');\n    }\n    \n    if(diffTypeFiled.length>0){\n        retObj.messages.add('diffTypeFiled exist ['+diffTypeFiled + ']');\n    }\n    \n    if(retObj.messages.length>0){\n        retObj.result = false;\n    }\n    \n    return retObj;\n}\n",
+			"enabled": true
+		},
+		{
+			"key": "sendGetRequest",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "diffTest",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "sendRequest",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "minNo_userProfile",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "userKey_userProfile",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "minNo_flerken",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "userKey_flerken",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "assertSameResponse",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "setThis",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "expect",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "userSettings",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "usedRouteFavorite",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "insurer",
+			"value": "db",
+			"enabled": true
+		},
+		{
+			"key": "insurancePlan",
+			"value": "tmapSafeDrivingInsPlan",
+			"enabled": true
+		},
+		{
+			"key": "drivingInsurance",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "purchaseItem",
+			"value": "",
+			"enabled": true
+		}
+	],
+	"name": "Flerken Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2020-11-03T08:12:07.022Z",
+	"_postman_exported_using": "Postman/7.34.0"
+}

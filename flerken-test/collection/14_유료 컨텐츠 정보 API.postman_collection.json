@@ -1,0 +1,497 @@
+{
+	"info": {
+		"_postman_id": "fde3758a-e9fc-4cb9-986f-4b02c13d3a52",
+		"name": "14_유료 컨텐츠 정보 API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "14_01_유료 컨텐츠 정보 조회",
+			"item": [
+				{
+					"name": "14_01_01_유료 컨텐츠 정보 조회 성공",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9d73f61b-4d0e-45e4-855a-29bbaad74b2c",
+								"exec": [
+									"const purchaseItem = eval(globals.purchaseItem)();",
+									"const url = pm.variables.get(\"host\") + purchaseItem.uri;",
+									"const body = purchaseItem.registBody;",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "24f8399b-410a-4bf5-8f26-60e3f31c7886",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"const registerBody = eval(globals.purchaseItem)().registBody;",
+									"tests[\"purchaseItems 확인\"] = resultBody.purchaseItems;",
+									"tests[\"purchaseItemId 확인\"] = resultBody.purchaseItems[0].purchaseItemId;",
+									"pm.test('itemId 확인', () => pm.expect(resultBody.purchaseItems[0].itemId).to.eql(registerBody.purchaseItems[0].itemId));",
+									"pm.test('itemType 확인', () => pm.expect(resultBody.purchaseItems[0].itemType).to.eql(registerBody.purchaseItems[0].itemType));",
+									"pm.test('usagePeriod.usageStartDate 확인', () => pm.expect(resultBody.purchaseItems[0].usagePeriod.usageStartDate).to.eql(registerBody.purchaseItems[0].usagePeriod.usageStartDate));",
+									"pm.test('usagePeriod.usageEndDate 확인', () => pm.expect(resultBody.purchaseItems[0].usagePeriod.usageEndDate).to.eql(registerBody.purchaseItems[0].usagePeriod.usageEndDate));",
+									"",
+									"// 테스트 데이터 삭제",
+									"const purchaseItem = eval(globals.purchaseItem)();",
+									"const url = pm.variables.get(\"host\") + purchaseItem.uri;",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)()",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/purchase-item/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"purchase-item",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "14_01_02_유료 컨텐츠 정보 조회 성공(구매 항목 없음)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "28b6f5a1-d410-4d84-940d-381d5cd4f5fc",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "890aa588-577b-42c2-9d7e-08423ce519f9",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('purchaseItems 확인', () => pm.expect(resultBody.purchaseItems).to.eql([]));",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/purchase-item/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"purchase-item",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e87fd66c-cf4f-44e3-a083-5e43b03e084a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "bbb539dd-4f78-40e7-b268-d552f72bb8d0",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "14_02_유료 컨텐츠 정보 저장",
+			"item": [
+				{
+					"name": "14_02_01_유료 컨텐츠 정보 저장 성공",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "49e6f7f1-8727-4cab-a495-258a09f51699",
+								"exec": [
+									"// 테스트 데이터 삭제",
+									"const purchaseItem = eval(globals.purchaseItem)();",
+									"const url = pm.variables.get(\"host\") + purchaseItem.uri;",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)()",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "794ee2b8-612f-494d-94d7-ea5b96f11382",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"// 테스트 데이터 삭제",
+									"const purchaseItem = eval(globals.purchaseItem)();",
+									"const url = pm.variables.get(\"host\") + purchaseItem.uri;",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)()",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"purchaseItems\": [\n    {\n      \"itemId\": \"item01\",\n      \"itemType\": \"VOICE\",\n      \"usagePeriod\": {\n        \"usageEndDate\": 20210614235959,\n        \"usageStartDate\": 20200615000000\n      }\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/purchase-item/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"purchase-item",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "14_02_01_유료 컨텐츠 정보 저장 실패(필수입력값 누락)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d21d24ee-303e-4d36-8504-affd3ca2b70a",
+								"exec": [
+									"// 테스트 데이터 삭제",
+									"const purchaseItem = eval(globals.purchaseItem)();",
+									"const url = pm.variables.get(\"host\") + purchaseItem.uri;",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)()",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "08009699-fc47-49c1-8263-27888e8baa83",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(400));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('code 확인', () => pm.expect(resultBody.code).to.eql('POI02001R'));",
+									"pm.test('reasonCode 확인', () => pm.expect(resultBody.reasonCode).to.eql('REQUEST_VALIDATE_ERROR'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"purchaseItems\": [\n    {\n      \"itemId\": \"item01\",\n      \"usagePeriod\": {\n        \"usageEndDate\": 20210614235959,\n        \"usageStartDate\": 20200615000000\n      }\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/purchase-item/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"purchase-item",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "14_03_유료 컨텐츠 정보 삭제",
+			"item": [
+				{
+					"name": "14_03_01_유료 컨텐츠 정보 삭제 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "18414b98-5f6a-4382-8a0a-95e5200acd26",
+								"exec": [
+									"//수행 결과 검증",
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/purchase-item/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"purchase-item",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "5f5aeabe-f925-43f9-9538-5df7f0bb69bd",
+				"type": "text/javascript",
+				"exec": [
+					"postman.setGlobalVariable('purchaseItem', () => {",
+					"    const userKey = pm.variables.get('userKey');",
+					"    return {",
+					"            \"uri\": `/api/v1/purchase-item/${userKey}`,",
+					"            \"registBody\": {",
+					"            \"purchaseItems\": [",
+					"                {",
+					"                \"itemId\": \"item01\",",
+					"                \"itemType\": \"VOICE\",",
+					"                \"usagePeriod\": {",
+					"                    \"usageEndDate\": \"20210614235959\",",
+					"                    \"usageStartDate\": \"20200615000000\"",
+					"                }",
+					"                }",
+					"            ]",
+					"        }",
+					"    }",
+					"    }    ",
+					");"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "fe5a09db-635f-4f96-9796-f167dcd8596a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

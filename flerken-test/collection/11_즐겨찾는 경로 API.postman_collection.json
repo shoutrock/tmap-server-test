@@ -1,0 +1,1210 @@
+{
+	"info": {
+		"_postman_id": "2da81545-85da-4e01-99cf-a4d2303f16bf",
+		"name": "11_즐겨찾는 경로 API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "11_01_즐겨찾는 경로 조회",
+			"item": [
+				{
+					"name": "11_01_01_즐겨찾는 경로 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"const registBody = eval(globals.usedRouteFavorite)().registBody;",
+									"",
+									"pm.test('usedRouteFavoriteDtos 확인', ",
+									"  () => pm.expect(resultBody).to.have.property('usedRouteFavoriteDtos'));",
+									"pm.test('usedRouteId 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].usedRouteId).to.eql(registBody.usedRouteId));",
+									"pm.test('usedRouteDescription 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].usedRouteDescription).to.eql(registBody.usedRouteDescription));",
+									"pm.test('userKey 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].userKey).to.eql(pm.variables.get('userKey')));",
+									"",
+									"pm.test('departure 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0]).to.have.property('departure'));",
+									"pm.test('departure.minimum.noorX 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].departure.minimum.noorX).to.eql(registBody.departure.minimum.noorX));",
+									"pm.test('departure.minimum.noorY 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].departure.minimum.noorY).to.eql(registBody.departure.minimum.noorY));",
+									"pm.test('departure.maximum.noorX 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].departure.maximum.noorX).to.eql(registBody.departure.maximum.noorX));",
+									"pm.test('departure.maximum.noorY 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].departure.maximum.noorY).to.eql(registBody.departure.maximum.noorY));",
+									"pm.test('departure.center.noorX 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].departure.center.noorX).to.eql(registBody.departure.center.noorX));",
+									"pm.test('departure.center.noorY 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].departure.center.noorY).to.eql(registBody.departure.center.noorY));",
+									"",
+									"pm.test('destination 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0]).to.have.property('destination'));",
+									"pm.test('destination.pkey 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].destination.pkey).to.eql(registBody.destination.pkey));",
+									"pm.test('destination.poiId 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].destination.poiId).to.eql(registBody.destination.poiId));",
+									"pm.test('destination.navSeq 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].destination.navSeq).to.eql(registBody.destination.navSeq));",
+									"pm.test('destination.name 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].destination.name).to.eql(registBody.destination.name));",
+									"pm.test('destination.center.noorX 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].destination.center.noorX).to.eql(registBody.destination.center.noorX));",
+									"pm.test('destination.center.noorY 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0].destination.center.noorY).to.eql(registBody.destination.center.noorY));",
+									"",
+									"pm.test('routeTrace 확인', ",
+									"  () => pm.expect(resultBody.usedRouteFavoriteDtos[0]).to.have.property('routeTrace'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9eeb8e5e-6af2-4754-a4b8-c8cf427caf83",
+								"exec": [
+									"const usedRouteFavorite = eval(globals.usedRouteFavorite)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"",
+									"const remove = function() {",
+									"    const removeUrl = `${host}/${usedRouteFavorite.uri}/${userKey}`;",
+									"    pm.sendRequest({",
+									"        url: removeUrl, ",
+									"        async:false,",
+									"        method: 'DELETE',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(usedRouteFavorite.removeBody)",
+									"    }, function (err, res) {",
+									"        regist();",
+									"    })",
+									"};",
+									"",
+									"const regist = function() {",
+									"    let registBody = usedRouteFavorite.registBody;",
+									"    registBody.userKey = userKey;",
+									"    const registUrl = `${host}/${usedRouteFavorite.uri}`;",
+									"    pm.sendRequest({",
+									"        url: registUrl, ",
+									"        async:false,",
+									"        method: 'POST',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(registBody)",
+									"    }, function (err, res) {",
+									"        console.log(res);",
+									"    });",
+									"};",
+									"",
+									"const readyTestData = function() {",
+									"    remove();",
+									"}",
+									"",
+									"//테스트 데이터 삭제 후 새로 생성.",
+									"readyTestData();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/used-route-favorite/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"used-route-favorite",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11_01_02_즐겨찾는 경로 조회_정렬기준오류",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(400));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('code : POI02004R 확인', () => pm.expect(resultBody.code).to.eql('POI02004R'));",
+									"pm.test('reasonCode : REQUEST_VALIDATE_ERROR 확인', () => pm.expect(resultBody.reasonCode).to.eql('REQUEST_VALIDATE_ERROR'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9eeb8e5e-6af2-4754-a4b8-c8cf427caf83",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/used-route-favorite/{{userKey}}?sort=invalidSortValue",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"used-route-favorite",
+								"{{userKey}}"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "invalidSortValue"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "11_02_즐겨찾는 경로 저장",
+			"item": [
+				{
+					"name": "11_02_01_즐겨찾는 경로 저장 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d00f8dce-c666-4332-a775-7fe8285915b4",
+								"exec": [
+									"const usedRouteFavorite = eval(globals.usedRouteFavorite)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"",
+									"const remove = function() {",
+									"    const removeUrl = `${host}/${usedRouteFavorite.uri}/${userKey}`;",
+									"    pm.sendRequest({",
+									"        url: removeUrl, ",
+									"        async:false,",
+									"        method: 'DELETE',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(usedRouteFavorite.removeBody)",
+									"    }, function (err, res) {",
+									"        console.log(res);",
+									"    })",
+									"};",
+									"",
+									"//데이터 삭제",
+									"remove();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"departure\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4568459\",\n\t\t  \"noorY\": \"1349251\"\n\t\t},\n\t\t\"maximum\": {\n\t\t  \"noorX\": \"4568481\",\n\t\t  \"noorY\": \"1349287\"\n\t\t},\n\t\t\"minimum\": {\n\t\t  \"noorX\": \"4568435\",\n\t\t  \"noorY\": \"1349216\"\n\t\t},\n\t\t\"name\": \"용인사업장\"\n\t},\n\t\"destination\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4569264\",\n\t\t  \"noorY\": \"1352128\"\n\t\t},\n\t\t\"name\": \"신사동\",\n\t\t\"navSeq\": 1,\n\t\t\"pkey\": \"2319872301\",\n\t\t\"poiId\": \"23198723\"\n\t},\n\t\"routeTrace\": \"45776224,13443802:324,221:364,175:372,204:440,127:344,224:408,192:428,159:360,190:456,107:428,-10:424,122:-308,286:-312,225:-172,326:404,240:276,266:-16,370:-372,335:-420,192:-492,98:-424,81:-400,71:-580,103:-404,76:-416,75:-432,77:-420,77:-544,102:-516,177:-364,324:-116,419:268,401:228,288:-76,365:-132,403:-164,416:-216,291:-264,353:-184,384:-124,379:-208,393:-380,342:-424,197:-456,112:-508,132:-436,221:-356,308:-360,321:-364,324:-376,322:-392,341:-384,349:-400,356:-300,266:-340,296:-448,213:-448,133:-368,280:-308,270:-304,263:-352,314:-360,323:-388,347:-380,286:-420,249:-328,199:104,390:44,424:-48,419:-48,384:-48,323:-48,407:-60,391:-44,380:-52,392:-44,390:-60,339:-44,328:-44,357:-52,371:-48,367:-52,366:-48,378:-52,386:-56,406:-44,326:-48,372:-52,383:-44,334:-24,404:76,427:196,420:264,391:244,408:196,447:112,454:52,441:36,423:36,406:28,386:32,386:36,383:32,392:36,415:36,446:36,459:40,438:32,416:32,392:36,375:60,360:104,330:184,449:144,340:140,338:144,339:152,366:136,342:92,321:44,424:0,341:-8,354:-8,396:-20,395:-40,364:-48,326:-52,380:-32,376:-16,344:4,366:24,349:28,334:32,402:28,357:24,421:-20,455:-52,326:-152,479:-172,360:-216,358:-244,342:-252,351:-252,353:-248,333:-228,313:-236,323:-240,324:-240,324:-244,334:-248,341:-256,340:-252,335:-316,282:-412,184:-452,93:-420,140:-360,247:-276,329:-272,342:-288,361:-272,343:-224,282:-220,274:-248,264:-364,309:-356,218:-376,186:-356,169:-388,182:-380,173:-420,177:-392,140:-404,138:-396,130:-396,135:-392,130:-376,128:-396,131:-392,133:-408,140:-392,130:-376,128:-392,130:-376,128:-396,132:-424,143:-496,165:-432,119:-448,96:-472,91:-412,81:-456,86:-508,121:-516,231:-308,224:-248,270:-184,311:-112,357:-72,388:-72,385:-68,371:-64,390:-56,375:-64,399:-64,415:-64,426:-64,416:-60,397:-76,379:-160,380:-248,341:-328,302:-320,287:-180,329:-20,355:132,354:156,341:140,313:184,394:148,324:176,375:168,373:0,384:-264,251:-408,122:-440,121:-432,154:-496,138:-512,161:-532,136:-544,120:-448,120:-492,139:-436,122:-432,123:-416,118:-404,111:-564,158:-548,154:-408,107:-416,97:-408,113:-488,170:-316,345:-404,228:-460,75:-400,183:-428,191:60,387:140,367:-316,269:-428,141:-488,169:-372,132:-376,132:-524,40:-468,-165:-488,-154:-444,-79:-56,332:156,332:144,320:100,441:36,374:-140,313:-116,338:-260,285:-272,-40:0,0\",\n\t\"usedRouteDescription\": \"집 : 초보자용 넓은길 위주\",\n\t\"usedRouteId\": \"test-routeid-1\",\n\t\"userKey\": \"{{userKey}}\"\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/used-route-favorite/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"used-route-favorite",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11_02_02_즐겨찾는 경로 저장 성공 (덮어쓰기)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d00f8dce-c666-4332-a775-7fe8285915b4",
+								"exec": [
+									"const usedRouteFavorite = eval(globals.usedRouteFavorite)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"",
+									"const remove = function() {",
+									"    const removeUrl = `${host}/${usedRouteFavorite.uri}/${userKey}`;",
+									"    pm.sendRequest({",
+									"        url: removeUrl, ",
+									"        async:false,",
+									"        method: 'DELETE',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(usedRouteFavorite.removeBody)",
+									"    }, function (err, res) {",
+									"        regist();",
+									"    })",
+									"};",
+									"",
+									"const regist = function() {",
+									"    let registBody = usedRouteFavorite.registBody;",
+									"    registBody.userKey = userKey;",
+									"    const registUrl = `${host}/${usedRouteFavorite.uri}`;",
+									"    pm.sendRequest({",
+									"        url: registUrl, ",
+									"        async:false,",
+									"        method: 'POST',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(registBody)",
+									"    }, function (err, res) {",
+									"        console.log(res);",
+									"    });",
+									"};",
+									"",
+									"const readyTestData = function() {",
+									"    remove();",
+									"}",
+									"",
+									"//테스트 데이터 삭제 후 새로 생성.",
+									"readyTestData();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"departure\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4568459\",\n\t\t  \"noorY\": \"1349251\"\n\t\t},\n\t\t\"maximum\": {\n\t\t  \"noorX\": \"4568481\",\n\t\t  \"noorY\": \"1349287\"\n\t\t},\n\t\t\"minimum\": {\n\t\t  \"noorX\": \"4568435\",\n\t\t  \"noorY\": \"1349216\"\n\t\t},\n\t\t\"name\": \"용인사업장\"\n\t},\n\t\"destination\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4569264\",\n\t\t  \"noorY\": \"1352128\"\n\t\t},\n\t\t\"name\": \"신사동\",\n\t\t\"navSeq\": 1,\n\t\t\"pkey\": \"2319872301\",\n\t\t\"poiId\": \"23198723\"\n\t},\n\t\"routeTrace\": \"45776224,13443802:324,221:364,175:372,204:440,127:344,224:408,192:428,159:360,190:456,107:428,-10:424,122:-308,286:-312,225:-172,326:404,240:276,266:-16,370:-372,335:-420,192:-492,98:-424,81:-400,71:-580,103:-404,76:-416,75:-432,77:-420,77:-544,102:-516,177:-364,324:-116,419:268,401:228,288:-76,365:-132,403:-164,416:-216,291:-264,353:-184,384:-124,379:-208,393:-380,342:-424,197:-456,112:-508,132:-436,221:-356,308:-360,321:-364,324:-376,322:-392,341:-384,349:-400,356:-300,266:-340,296:-448,213:-448,133:-368,280:-308,270:-304,263:-352,314:-360,323:-388,347:-380,286:-420,249:-328,199:104,390:44,424:-48,419:-48,384:-48,323:-48,407:-60,391:-44,380:-52,392:-44,390:-60,339:-44,328:-44,357:-52,371:-48,367:-52,366:-48,378:-52,386:-56,406:-44,326:-48,372:-52,383:-44,334:-24,404:76,427:196,420:264,391:244,408:196,447:112,454:52,441:36,423:36,406:28,386:32,386:36,383:32,392:36,415:36,446:36,459:40,438:32,416:32,392:36,375:60,360:104,330:184,449:144,340:140,338:144,339:152,366:136,342:92,321:44,424:0,341:-8,354:-8,396:-20,395:-40,364:-48,326:-52,380:-32,376:-16,344:4,366:24,349:28,334:32,402:28,357:24,421:-20,455:-52,326:-152,479:-172,360:-216,358:-244,342:-252,351:-252,353:-248,333:-228,313:-236,323:-240,324:-240,324:-244,334:-248,341:-256,340:-252,335:-316,282:-412,184:-452,93:-420,140:-360,247:-276,329:-272,342:-288,361:-272,343:-224,282:-220,274:-248,264:-364,309:-356,218:-376,186:-356,169:-388,182:-380,173:-420,177:-392,140:-404,138:-396,130:-396,135:-392,130:-376,128:-396,131:-392,133:-408,140:-392,130:-376,128:-392,130:-376,128:-396,132:-424,143:-496,165:-432,119:-448,96:-472,91:-412,81:-456,86:-508,121:-516,231:-308,224:-248,270:-184,311:-112,357:-72,388:-72,385:-68,371:-64,390:-56,375:-64,399:-64,415:-64,426:-64,416:-60,397:-76,379:-160,380:-248,341:-328,302:-320,287:-180,329:-20,355:132,354:156,341:140,313:184,394:148,324:176,375:168,373:0,384:-264,251:-408,122:-440,121:-432,154:-496,138:-512,161:-532,136:-544,120:-448,120:-492,139:-436,122:-432,123:-416,118:-404,111:-564,158:-548,154:-408,107:-416,97:-408,113:-488,170:-316,345:-404,228:-460,75:-400,183:-428,191:60,387:140,367:-316,269:-428,141:-488,169:-372,132:-376,132:-524,40:-468,-165:-488,-154:-444,-79:-56,332:156,332:144,320:100,441:36,374:-140,313:-116,338:-260,285:-272,-40:0,0\",\n\t\"usedRouteDescription\": \"회사 : 초보자용 넓은길 위주\",\n\t\"usedRouteId\": \"test-routeid-2\",\n\t\"replaceUsedRouteId\": \"test-routeid-1\",\n\t\"userKey\": \"{{userKey}}\"\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/used-route-favorite/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"used-route-favorite",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11_02_03_즐겨찾는 경로 저장 실패 (ID중복)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(400));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('code : POI03001R 확인', () => pm.expect(resultBody.code).to.eql('POI03001R'));",
+									"pm.test('reasonCode : REQUEST_VALIDATE_ERROR 확인', () => pm.expect(resultBody.reasonCode).to.eql('REQUEST_VALIDATE_ERROR'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d00f8dce-c666-4332-a775-7fe8285915b4",
+								"exec": [
+									"const usedRouteFavorite = eval(globals.usedRouteFavorite)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"",
+									"const remove = function() {",
+									"    const removeUrl = `${host}/${usedRouteFavorite.uri}/${userKey}`;",
+									"    pm.sendRequest({",
+									"        url: removeUrl, ",
+									"        async:false,",
+									"        method: 'DELETE',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(usedRouteFavorite.removeBody)",
+									"    }, function (err, res) {",
+									"        regist();",
+									"    })",
+									"};",
+									"",
+									"const regist = function() {",
+									"    let registBody = usedRouteFavorite.registBody;",
+									"    registBody.userKey = userKey;",
+									"    const registUrl = `${host}/${usedRouteFavorite.uri}`;",
+									"    pm.sendRequest({",
+									"        url: registUrl, ",
+									"        async:false,",
+									"        method: 'POST',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(registBody)",
+									"    }, function (err, res) {",
+									"        console.log(res);",
+									"    });",
+									"};",
+									"",
+									"const readyTestData = function() {",
+									"    remove();",
+									"}",
+									"",
+									"//테스트 데이터 삭제 후 새로 생성.",
+									"readyTestData();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"departure\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4568459\",\n\t\t  \"noorY\": \"1349251\"\n\t\t},\n\t\t\"maximum\": {\n\t\t  \"noorX\": \"4568481\",\n\t\t  \"noorY\": \"1349287\"\n\t\t},\n\t\t\"minimum\": {\n\t\t  \"noorX\": \"4568435\",\n\t\t  \"noorY\": \"1349216\"\n\t\t},\n\t\t\"name\": \"용인사업장\"\n\t},\n\t\"destination\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4569264\",\n\t\t  \"noorY\": \"1352128\"\n\t\t},\n\t\t\"name\": \"신사동\",\n\t\t\"navSeq\": 1,\n\t\t\"pkey\": \"2319872301\",\n\t\t\"poiId\": \"23198723\"\n\t},\n\t\"routeTrace\": \"45776224,13443802:324,221:364,175:372,204:440,127:344,224:408,192:428,159:360,190:456,107:428,-10:424,122:-308,286:-312,225:-172,326:404,240:276,266:-16,370:-372,335:-420,192:-492,98:-424,81:-400,71:-580,103:-404,76:-416,75:-432,77:-420,77:-544,102:-516,177:-364,324:-116,419:268,401:228,288:-76,365:-132,403:-164,416:-216,291:-264,353:-184,384:-124,379:-208,393:-380,342:-424,197:-456,112:-508,132:-436,221:-356,308:-360,321:-364,324:-376,322:-392,341:-384,349:-400,356:-300,266:-340,296:-448,213:-448,133:-368,280:-308,270:-304,263:-352,314:-360,323:-388,347:-380,286:-420,249:-328,199:104,390:44,424:-48,419:-48,384:-48,323:-48,407:-60,391:-44,380:-52,392:-44,390:-60,339:-44,328:-44,357:-52,371:-48,367:-52,366:-48,378:-52,386:-56,406:-44,326:-48,372:-52,383:-44,334:-24,404:76,427:196,420:264,391:244,408:196,447:112,454:52,441:36,423:36,406:28,386:32,386:36,383:32,392:36,415:36,446:36,459:40,438:32,416:32,392:36,375:60,360:104,330:184,449:144,340:140,338:144,339:152,366:136,342:92,321:44,424:0,341:-8,354:-8,396:-20,395:-40,364:-48,326:-52,380:-32,376:-16,344:4,366:24,349:28,334:32,402:28,357:24,421:-20,455:-52,326:-152,479:-172,360:-216,358:-244,342:-252,351:-252,353:-248,333:-228,313:-236,323:-240,324:-240,324:-244,334:-248,341:-256,340:-252,335:-316,282:-412,184:-452,93:-420,140:-360,247:-276,329:-272,342:-288,361:-272,343:-224,282:-220,274:-248,264:-364,309:-356,218:-376,186:-356,169:-388,182:-380,173:-420,177:-392,140:-404,138:-396,130:-396,135:-392,130:-376,128:-396,131:-392,133:-408,140:-392,130:-376,128:-392,130:-376,128:-396,132:-424,143:-496,165:-432,119:-448,96:-472,91:-412,81:-456,86:-508,121:-516,231:-308,224:-248,270:-184,311:-112,357:-72,388:-72,385:-68,371:-64,390:-56,375:-64,399:-64,415:-64,426:-64,416:-60,397:-76,379:-160,380:-248,341:-328,302:-320,287:-180,329:-20,355:132,354:156,341:140,313:184,394:148,324:176,375:168,373:0,384:-264,251:-408,122:-440,121:-432,154:-496,138:-512,161:-532,136:-544,120:-448,120:-492,139:-436,122:-432,123:-416,118:-404,111:-564,158:-548,154:-408,107:-416,97:-408,113:-488,170:-316,345:-404,228:-460,75:-400,183:-428,191:60,387:140,367:-316,269:-428,141:-488,169:-372,132:-376,132:-524,40:-468,-165:-488,-154:-444,-79:-56,332:156,332:144,320:100,441:36,374:-140,313:-116,338:-260,285:-272,-40:0,0\",\n\t\"usedRouteDescription\": \"회사 : 초보자용 넓은길 위주\",\n\t\"usedRouteId\": \"test-routeid-1\",\n\t\"userKey\": \"{{userKey}}\"\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/used-route-favorite/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"used-route-favorite",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10_02_04_즐겨찾는 경로 저장 실패 (OD중복)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(400));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('code : POI03001R 확인', () => pm.expect(resultBody.code).to.eql('POI03001R'));",
+									"pm.test('reasonCode : REQUEST_VALIDATE_ERROR 확인', () => pm.expect(resultBody.reasonCode).to.eql('REQUEST_VALIDATE_ERROR'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d00f8dce-c666-4332-a775-7fe8285915b4",
+								"exec": [
+									"const usedRouteFavorite = eval(globals.usedRouteFavorite)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"",
+									"const remove = function() {",
+									"    const removeUrl = `${host}/${usedRouteFavorite.uri}/${userKey}`;",
+									"    pm.sendRequest({",
+									"        url: removeUrl, ",
+									"        async:false,",
+									"        method: 'DELETE',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(usedRouteFavorite.removeBody)",
+									"    }, function (err, res) {",
+									"        regist();",
+									"    })",
+									"};",
+									"",
+									"const regist = function() {",
+									"    let registBody = usedRouteFavorite.registBody;",
+									"    registBody.userKey = userKey;",
+									"    const registUrl = `${host}/${usedRouteFavorite.uri}`;",
+									"    pm.sendRequest({",
+									"        url: registUrl, ",
+									"        async:false,",
+									"        method: 'POST',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(registBody)",
+									"    }, function (err, res) {",
+									"        console.log(res);",
+									"    });",
+									"};",
+									"",
+									"const readyTestData = function() {",
+									"    remove();",
+									"}",
+									"",
+									"//테스트 데이터 삭제 후 새로 생성.",
+									"readyTestData();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"departure\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4568459\",\n\t\t  \"noorY\": \"1349251\"\n\t\t},\n\t\t\"maximum\": {\n\t\t  \"noorX\": \"4568481\",\n\t\t  \"noorY\": \"1349287\"\n\t\t},\n\t\t\"minimum\": {\n\t\t  \"noorX\": \"4568435\",\n\t\t  \"noorY\": \"1349216\"\n\t\t},\n\t\t\"name\": \"용인사업장\"\n\t},\n\t\"destination\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4569264\",\n\t\t  \"noorY\": \"1352128\"\n\t\t},\n\t\t\"name\": \"신사동\",\n\t\t\"navSeq\": 1,\n\t\t\"pkey\": \"2319872301\",\n\t\t\"poiId\": \"23198723\"\n\t},\n\t\"routeTrace\": \"45776224,13443802:324,221:364,175:372,204:440,127:344,224:408,192:428,159:360,190:456,107:428,-10:424,122:-308,286:-312,225:-172,326:404,240:276,266:-16,370:-372,335:-420,192:-492,98:-424,81:-400,71:-580,103:-404,76:-416,75:-432,77:-420,77:-544,102:-516,177:-364,324:-116,419:268,401:228,288:-76,365:-132,403:-164,416:-216,291:-264,353:-184,384:-124,379:-208,393:-380,342:-424,197:-456,112:-508,132:-436,221:-356,308:-360,321:-364,324:-376,322:-392,341:-384,349:-400,356:-300,266:-340,296:-448,213:-448,133:-368,280:-308,270:-304,263:-352,314:-360,323:-388,347:-380,286:-420,249:-328,199:104,390:44,424:-48,419:-48,384:-48,323:-48,407:-60,391:-44,380:-52,392:-44,390:-60,339:-44,328:-44,357:-52,371:-48,367:-52,366:-48,378:-52,386:-56,406:-44,326:-48,372:-52,383:-44,334:-24,404:76,427:196,420:264,391:244,408:196,447:112,454:52,441:36,423:36,406:28,386:32,386:36,383:32,392:36,415:36,446:36,459:40,438:32,416:32,392:36,375:60,360:104,330:184,449:144,340:140,338:144,339:152,366:136,342:92,321:44,424:0,341:-8,354:-8,396:-20,395:-40,364:-48,326:-52,380:-32,376:-16,344:4,366:24,349:28,334:32,402:28,357:24,421:-20,455:-52,326:-152,479:-172,360:-216,358:-244,342:-252,351:-252,353:-248,333:-228,313:-236,323:-240,324:-240,324:-244,334:-248,341:-256,340:-252,335:-316,282:-412,184:-452,93:-420,140:-360,247:-276,329:-272,342:-288,361:-272,343:-224,282:-220,274:-248,264:-364,309:-356,218:-376,186:-356,169:-388,182:-380,173:-420,177:-392,140:-404,138:-396,130:-396,135:-392,130:-376,128:-396,131:-392,133:-408,140:-392,130:-376,128:-392,130:-376,128:-396,132:-424,143:-496,165:-432,119:-448,96:-472,91:-412,81:-456,86:-508,121:-516,231:-308,224:-248,270:-184,311:-112,357:-72,388:-72,385:-68,371:-64,390:-56,375:-64,399:-64,415:-64,426:-64,416:-60,397:-76,379:-160,380:-248,341:-328,302:-320,287:-180,329:-20,355:132,354:156,341:140,313:184,394:148,324:176,375:168,373:0,384:-264,251:-408,122:-440,121:-432,154:-496,138:-512,161:-532,136:-544,120:-448,120:-492,139:-436,122:-432,123:-416,118:-404,111:-564,158:-548,154:-408,107:-416,97:-408,113:-488,170:-316,345:-404,228:-460,75:-400,183:-428,191:60,387:140,367:-316,269:-428,141:-488,169:-372,132:-376,132:-524,40:-468,-165:-488,-154:-444,-79:-56,332:156,332:144,320:100,441:36,374:-140,313:-116,338:-260,285:-272,-40:0,0\",\n\t\"usedRouteDescription\": \"회사 : 초보자용 넓은길 위주\",\n\t\"usedRouteId\": \"test-routeid-3\",\n\t\"userKey\": \"{{userKey}}\"\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/used-route-favorite/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"used-route-favorite",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10_02_05_즐겨찾는 경로 저장 실패 (최대건수 초과)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(400));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('code : POI03002U 확인', () => pm.expect(resultBody.code).to.eql('POI03002U'));",
+									"pm.test('reasonCode : FAILRESULT_ERROR 확인', () => pm.expect(resultBody.reasonCode).to.eql('FAILRESULT_ERROR'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d00f8dce-c666-4332-a775-7fe8285915b4",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"departure\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4568460\",\n\t\t  \"noorY\": \"1349252\"\n\t\t},\n\t\t\"maximum\": {\n\t\t  \"noorX\": \"4568482\",\n\t\t  \"noorY\": \"1349288\"\n\t\t},\n\t\t\"minimum\": {\n\t\t  \"noorX\": \"4568436\",\n\t\t  \"noorY\": \"1349217\"\n\t\t},\n\t\t\"name\": \"용인사업장\"\n\t},\n\t\"destination\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4569265\",\n\t\t  \"noorY\": \"1352129\"\n\t\t},\n\t\t\"name\": \"신사동\",\n\t\t\"navSeq\": 1,\n\t\t\"pkey\": \"2319872301\",\n\t\t\"poiId\": \"23198723\"\n\t},\n\t\"routeTrace\": \"45776224,13443802:324,221:364,175:372,204:440,127:344,224:408,192:428,159:360,190:456,107:428,-10:424,122:-308,286:-312,225:-172,326:404,240:276,266:-16,370:-372,335:-420,192:-492,98:-424,81:-400,71:-580,103:-404,76:-416,75:-432,77:-420,77:-544,102:-516,177:-364,324:-116,419:268,401:228,288:-76,365:-132,403:-164,416:-216,291:-264,353:-184,384:-124,379:-208,393:-380,342:-424,197:-456,112:-508,132:-436,221:-356,308:-360,321:-364,324:-376,322:-392,341:-384,349:-400,356:-300,266:-340,296:-448,213:-448,133:-368,280:-308,270:-304,263:-352,314:-360,323:-388,347:-380,286:-420,249:-328,199:104,390:44,424:-48,419:-48,384:-48,323:-48,407:-60,391:-44,380:-52,392:-44,390:-60,339:-44,328:-44,357:-52,371:-48,367:-52,366:-48,378:-52,386:-56,406:-44,326:-48,372:-52,383:-44,334:-24,404:76,427:196,420:264,391:244,408:196,447:112,454:52,441:36,423:36,406:28,386:32,386:36,383:32,392:36,415:36,446:36,459:40,438:32,416:32,392:36,375:60,360:104,330:184,449:144,340:140,338:144,339:152,366:136,342:92,321:44,424:0,341:-8,354:-8,396:-20,395:-40,364:-48,326:-52,380:-32,376:-16,344:4,366:24,349:28,334:32,402:28,357:24,421:-20,455:-52,326:-152,479:-172,360:-216,358:-244,342:-252,351:-252,353:-248,333:-228,313:-236,323:-240,324:-240,324:-244,334:-248,341:-256,340:-252,335:-316,282:-412,184:-452,93:-420,140:-360,247:-276,329:-272,342:-288,361:-272,343:-224,282:-220,274:-248,264:-364,309:-356,218:-376,186:-356,169:-388,182:-380,173:-420,177:-392,140:-404,138:-396,130:-396,135:-392,130:-376,128:-396,131:-392,133:-408,140:-392,130:-376,128:-392,130:-376,128:-396,132:-424,143:-496,165:-432,119:-448,96:-472,91:-412,81:-456,86:-508,121:-516,231:-308,224:-248,270:-184,311:-112,357:-72,388:-72,385:-68,371:-64,390:-56,375:-64,399:-64,415:-64,426:-64,416:-60,397:-76,379:-160,380:-248,341:-328,302:-320,287:-180,329:-20,355:132,354:156,341:140,313:184,394:148,324:176,375:168,373:0,384:-264,251:-408,122:-440,121:-432,154:-496,138:-512,161:-532,136:-544,120:-448,120:-492,139:-436,122:-432,123:-416,118:-404,111:-564,158:-548,154:-408,107:-416,97:-408,113:-488,170:-316,345:-404,228:-460,75:-400,183:-428,191:60,387:140,367:-316,269:-428,141:-488,169:-372,132:-376,132:-524,40:-468,-165:-488,-154:-444,-79:-56,332:156,332:144,320:100,441:36,374:-140,313:-116,338:-260,285:-272,-40:0,0\",\n\t\"usedRouteDescription\": \"회사 : 초보자용 넓은길 위주\",\n\t\"usedRouteId\": \"test-routeid-101\",\n\t\"userKey\": \"{{userKey_exceedTest}}\"\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/used-route-favorite/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"used-route-favorite",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0e4c2e12-8f19-4258-9348-723457ba6dea",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c029f731-fa98-4131-89c3-1b9ab65ba334",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "11_03_즐겨찾는 경로 삭제",
+			"item": [
+				{
+					"name": "11_03_01_즐겨찾는 경로 삭제 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d00f8dce-c666-4332-a775-7fe8285915b4",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"usedFavoriteRouteIds\":[\"test-routeid-1\"]\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/used-route-favorite/{{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"used-route-favorite",
+								"{{userKey}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0e4c2e12-8f19-4258-9348-723457ba6dea",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c029f731-fa98-4131-89c3-1b9ab65ba334",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "11_03_즐겨찾는 경로 수정",
+			"item": [
+				{
+					"name": "11_02_01_즐겨찾는 경로 수정 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "129fdf0b-09a7-4ad0-b9dd-cc1b6494947b",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"const registBody = eval(globals.usedRouteFavorite)().registBody;",
+									"",
+									"pm.test('departure 확인', () => pm.expect(resultBody).to.have.property('departure'));",
+									"pm.test('destination 확인', () => pm.expect(resultBody).to.have.property('destination'));",
+									"pm.test('routeTrace 확인', () => pm.expect(resultBody).to.have.property('routeTrace'));",
+									"",
+									"pm.test('usedRouteId 확인', () => pm.expect(resultBody.usedRouteId).to.eql('test-routeid-1'));",
+									"pm.test('usedRouteDescription 수정되었는지 확인', ",
+									"  () => pm.expect(resultBody.usedRouteDescription).to.eql('집 : 초보자용 넓은길 위주 (수정)'));",
+									"pm.test('userKey 확인', ",
+									"  () => pm.expect(resultBody.userKey).to.eql(pm.variables.get('userKey')));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d89738ab-1cb3-431b-bbfc-93ff5592d1a8",
+								"exec": [
+									"const usedRouteFavorite = eval(globals.usedRouteFavorite)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"",
+									"const remove = function() {",
+									"    const removeUrl = `${host}/${usedRouteFavorite.uri}/${userKey}`;",
+									"    pm.sendRequest({",
+									"        url: removeUrl, ",
+									"        async:false,",
+									"        method: 'DELETE',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(usedRouteFavorite.removeBody)",
+									"    }, function (err, res) {",
+									"        regist();",
+									"    })",
+									"};",
+									"",
+									"const regist = function() {",
+									"    let registBody = usedRouteFavorite.registBody;",
+									"    registBody.userKey = userKey;",
+									"    const registUrl = `${host}/${usedRouteFavorite.uri}`;",
+									"    pm.sendRequest({",
+									"        url: registUrl, ",
+									"        async:false,",
+									"        method: 'POST',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(registBody)",
+									"    }, function (err, res) {",
+									"        console.log(res);",
+									"    });",
+									"};",
+									"",
+									"const readyTestData = function() {",
+									"    remove();",
+									"}",
+									"",
+									"//테스트 데이터 삭제 후 새로 생성.",
+									"readyTestData();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"departure\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4568459\",\n\t\t  \"noorY\": \"1349251\"\n\t\t},\n\t\t\"maximum\": {\n\t\t  \"noorX\": \"4568481\",\n\t\t  \"noorY\": \"1349287\"\n\t\t},\n\t\t\"minimum\": {\n\t\t  \"noorX\": \"4568435\",\n\t\t  \"noorY\": \"1349216\"\n\t\t},\n\t\t\"name\": \"용인사업장\"\n\t},\n\t\"destination\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4569264\",\n\t\t  \"noorY\": \"1352128\"\n\t\t},\n\t\t\"name\": \"신사동\",\n\t\t\"navSeq\": 1,\n\t\t\"pkey\": \"2319872301\",\n\t\t\"poiId\": \"23198723\"\n\t},\n\t\"routeTrace\": \"45776224,13443802:324,221:364,175:372,204:440,127:344,224:408,192:428,159:360,190:456,107:428,-10:424,122:-308,286:-312,225:-172,326:404,240:276,266:-16,370:-372,335:-420,192:-492,98:-424,81:-400,71:-580,103:-404,76:-416,75:-432,77:-420,77:-544,102:-516,177:-364,324:-116,419:268,401:228,288:-76,365:-132,403:-164,416:-216,291:-264,353:-184,384:-124,379:-208,393:-380,342:-424,197:-456,112:-508,132:-436,221:-356,308:-360,321:-364,324:-376,322:-392,341:-384,349:-400,356:-300,266:-340,296:-448,213:-448,133:-368,280:-308,270:-304,263:-352,314:-360,323:-388,347:-380,286:-420,249:-328,199:104,390:44,424:-48,419:-48,384:-48,323:-48,407:-60,391:-44,380:-52,392:-44,390:-60,339:-44,328:-44,357:-52,371:-48,367:-52,366:-48,378:-52,386:-56,406:-44,326:-48,372:-52,383:-44,334:-24,404:76,427:196,420:264,391:244,408:196,447:112,454:52,441:36,423:36,406:28,386:32,386:36,383:32,392:36,415:36,446:36,459:40,438:32,416:32,392:36,375:60,360:104,330:184,449:144,340:140,338:144,339:152,366:136,342:92,321:44,424:0,341:-8,354:-8,396:-20,395:-40,364:-48,326:-52,380:-32,376:-16,344:4,366:24,349:28,334:32,402:28,357:24,421:-20,455:-52,326:-152,479:-172,360:-216,358:-244,342:-252,351:-252,353:-248,333:-228,313:-236,323:-240,324:-240,324:-244,334:-248,341:-256,340:-252,335:-316,282:-412,184:-452,93:-420,140:-360,247:-276,329:-272,342:-288,361:-272,343:-224,282:-220,274:-248,264:-364,309:-356,218:-376,186:-356,169:-388,182:-380,173:-420,177:-392,140:-404,138:-396,130:-396,135:-392,130:-376,128:-396,131:-392,133:-408,140:-392,130:-376,128:-392,130:-376,128:-396,132:-424,143:-496,165:-432,119:-448,96:-472,91:-412,81:-456,86:-508,121:-516,231:-308,224:-248,270:-184,311:-112,357:-72,388:-72,385:-68,371:-64,390:-56,375:-64,399:-64,415:-64,426:-64,416:-60,397:-76,379:-160,380:-248,341:-328,302:-320,287:-180,329:-20,355:132,354:156,341:140,313:184,394:148,324:176,375:168,373:0,384:-264,251:-408,122:-440,121:-432,154:-496,138:-512,161:-532,136:-544,120:-448,120:-492,139:-436,122:-432,123:-416,118:-404,111:-564,158:-548,154:-408,107:-416,97:-408,113:-488,170:-316,345:-404,228:-460,75:-400,183:-428,191:60,387:140,367:-316,269:-428,141:-488,169:-372,132:-376,132:-524,40:-468,-165:-488,-154:-444,-79:-56,332:156,332:144,320:100,441:36,374:-140,313:-116,338:-260,285:-272,-40:0,0\",\n\t\"usedRouteDescription\": \"집 : 초보자용 넓은길 위주 (수정)\",\n\t\"usedRouteId\": \"test-routeid-1\",\n\t\"userKey\": \"{{userKey}}\"\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/used-route-favorite/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"used-route-favorite",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11_02_01_즐겨찾는 경로 수정 실패 (원본 데이터 없음)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b099b15f-830b-4fb3-b97b-b23f6df53b73",
+								"exec": [
+									"pm.test('Response Code 확인', () => pm.expect(pm.response.code).to.eql(200));",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"pm.test('code : POI04001R 확인', () => pm.expect(resultBody.code).to.eql('POI04001R'));",
+									"pm.test('reasonCode : NULLRESULT_ERROR 확인', () => pm.expect(resultBody.reasonCode).to.eql('NULLRESULT_ERROR'));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "938500b3-7a3f-4f5a-aa54-1a6ac898afc6",
+								"exec": [
+									"const usedRouteFavorite = eval(globals.usedRouteFavorite)();",
+									"const host = pm.variables.get('host');",
+									"const userKey = pm.variables.get('userKey');",
+									"",
+									"const remove = function() {",
+									"    const removeUrl = `${host}/${usedRouteFavorite.uri}/${userKey}`;",
+									"    pm.sendRequest({",
+									"        url: removeUrl, ",
+									"        async:false,",
+									"        method: 'DELETE',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(usedRouteFavorite.removeBody)",
+									"    }, function (err, res) {",
+									"        regist();",
+									"    })",
+									"};",
+									"",
+									"const regist = function() {",
+									"    let registBody = usedRouteFavorite.registBody;",
+									"    registBody.userKey = userKey;",
+									"    const registUrl = `${host}/${usedRouteFavorite.uri}`;",
+									"    pm.sendRequest({",
+									"        url: registUrl, ",
+									"        async:false,",
+									"        method: 'POST',",
+									"        header:eval(globals.getHeader)(),",
+									"        body: JSON.stringify(registBody)",
+									"    }, function (err, res) {",
+									"        console.log(res);",
+									"    });",
+									"};",
+									"",
+									"const readyTestData = function() {",
+									"    remove();",
+									"}",
+									"",
+									"//테스트 데이터 삭제 후 새로 생성.",
+									"readyTestData();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"departure\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4568459\",\n\t\t  \"noorY\": \"1349251\"\n\t\t},\n\t\t\"maximum\": {\n\t\t  \"noorX\": \"4568481\",\n\t\t  \"noorY\": \"1349287\"\n\t\t},\n\t\t\"minimum\": {\n\t\t  \"noorX\": \"4568435\",\n\t\t  \"noorY\": \"1349216\"\n\t\t},\n\t\t\"name\": \"용인사업장\"\n\t},\n\t\"destination\": {\n\t\t\"center\": {\n\t\t  \"noorX\": \"4569264\",\n\t\t  \"noorY\": \"1352128\"\n\t\t},\n\t\t\"name\": \"신사동\",\n\t\t\"navSeq\": 1,\n\t\t\"pkey\": \"2319872301\",\n\t\t\"poiId\": \"23198723\"\n\t},\n\t\"routeTrace\": \"45776224,13443802:324,221:364,175:372,204:440,127:344,224:408,192:428,159:360,190:456,107:428,-10:424,122:-308,286:-312,225:-172,326:404,240:276,266:-16,370:-372,335:-420,192:-492,98:-424,81:-400,71:-580,103:-404,76:-416,75:-432,77:-420,77:-544,102:-516,177:-364,324:-116,419:268,401:228,288:-76,365:-132,403:-164,416:-216,291:-264,353:-184,384:-124,379:-208,393:-380,342:-424,197:-456,112:-508,132:-436,221:-356,308:-360,321:-364,324:-376,322:-392,341:-384,349:-400,356:-300,266:-340,296:-448,213:-448,133:-368,280:-308,270:-304,263:-352,314:-360,323:-388,347:-380,286:-420,249:-328,199:104,390:44,424:-48,419:-48,384:-48,323:-48,407:-60,391:-44,380:-52,392:-44,390:-60,339:-44,328:-44,357:-52,371:-48,367:-52,366:-48,378:-52,386:-56,406:-44,326:-48,372:-52,383:-44,334:-24,404:76,427:196,420:264,391:244,408:196,447:112,454:52,441:36,423:36,406:28,386:32,386:36,383:32,392:36,415:36,446:36,459:40,438:32,416:32,392:36,375:60,360:104,330:184,449:144,340:140,338:144,339:152,366:136,342:92,321:44,424:0,341:-8,354:-8,396:-20,395:-40,364:-48,326:-52,380:-32,376:-16,344:4,366:24,349:28,334:32,402:28,357:24,421:-20,455:-52,326:-152,479:-172,360:-216,358:-244,342:-252,351:-252,353:-248,333:-228,313:-236,323:-240,324:-240,324:-244,334:-248,341:-256,340:-252,335:-316,282:-412,184:-452,93:-420,140:-360,247:-276,329:-272,342:-288,361:-272,343:-224,282:-220,274:-248,264:-364,309:-356,218:-376,186:-356,169:-388,182:-380,173:-420,177:-392,140:-404,138:-396,130:-396,135:-392,130:-376,128:-396,131:-392,133:-408,140:-392,130:-376,128:-392,130:-376,128:-396,132:-424,143:-496,165:-432,119:-448,96:-472,91:-412,81:-456,86:-508,121:-516,231:-308,224:-248,270:-184,311:-112,357:-72,388:-72,385:-68,371:-64,390:-56,375:-64,399:-64,415:-64,426:-64,416:-60,397:-76,379:-160,380:-248,341:-328,302:-320,287:-180,329:-20,355:132,354:156,341:140,313:184,394:148,324:176,375:168,373:0,384:-264,251:-408,122:-440,121:-432,154:-496,138:-512,161:-532,136:-544,120:-448,120:-492,139:-436,122:-432,123:-416,118:-404,111:-564,158:-548,154:-408,107:-416,97:-408,113:-488,170:-316,345:-404,228:-460,75:-400,183:-428,191:60,387:140,367:-316,269:-428,141:-488,169:-372,132:-376,132:-524,40:-468,-165:-488,-154:-444,-79:-56,332:156,332:144,320:100,441:36,374:-140,313:-116,338:-260,285:-272,-40:0,0\",\n\t\"usedRouteDescription\": \"집 : 초보자용 넓은길 위주 (수정)\",\n\t\"usedRouteId\": \"test-routeid-2\",\n\t\"userKey\": \"{{userKey}}\"\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/used-route-favorite/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"used-route-favorite",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b72dce33-fc1b-41ba-bf00-d7a83cb831f2",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c2025afc-7cb7-43f3-8345-807e8f780b72",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "291f3c9f-8c78-400e-8ec2-ec3ce18cc7c6",
+				"type": "text/javascript",
+				"exec": [
+					"postman.setGlobalVariable('usedRouteFavorite', () => {",
+					"    return {",
+					"        \"uri\": \"api/v1/used-route-favorite\",",
+					"        \"registBody\": {",
+					"          \"userKey\": \"{{userKey}}\",",
+					"          \"departure\": {",
+					"              \"center\": {",
+					"                \"noorX\": \"4568459\",",
+					"                \"noorY\": \"1349251\"",
+					"              },",
+					"              \"maximum\": {",
+					"                \"noorX\": \"4568481\",",
+					"                \"noorY\": \"1349287\"",
+					"              },",
+					"              \"minimum\": {",
+					"                \"noorX\": \"4568435\",",
+					"                \"noorY\": \"1349216\"",
+					"              },",
+					"              \"name\": \"용인사업장\"",
+					"          },",
+					"          \"destination\": {",
+					"              \"center\": {",
+					"                \"noorX\": \"4569264\",",
+					"                \"noorY\": \"1352128\"",
+					"              },",
+					"              \"name\": \"신사동\",",
+					"              \"navSeq\": 1,",
+					"              \"pkey\": \"2319872301\",",
+					"              \"poiId\": \"23198723\"",
+					"          },",
+					"          \"routeTrace\": \"45776224,13443802:324,221:364,175:372,204:440,127:344,224:408,192:428,159:360,190:456,107:428,-10:424,122:-308,286:-312,225:-172,326:404,240:276,266:-16,370:-372,335:-420,192:-492,98:-424,81:-400,71:-580,103:-404,76:-416,75:-432,77:-420,77:-544,102:-516,177:-364,324:-116,419:268,401:228,288:-76,365:-132,403:-164,416:-216,291:-264,353:-184,384:-124,379:-208,393:-380,342:-424,197:-456,112:-508,132:-436,221:-356,308:-360,321:-364,324:-376,322:-392,341:-384,349:-400,356:-300,266:-340,296:-448,213:-448,133:-368,280:-308,270:-304,263:-352,314:-360,323:-388,347:-380,286:-420,249:-328,199:104,390:44,424:-48,419:-48,384:-48,323:-48,407:-60,391:-44,380:-52,392:-44,390:-60,339:-44,328:-44,357:-52,371:-48,367:-52,366:-48,378:-52,386:-56,406:-44,326:-48,372:-52,383:-44,334:-24,404:76,427:196,420:264,391:244,408:196,447:112,454:52,441:36,423:36,406:28,386:32,386:36,383:32,392:36,415:36,446:36,459:40,438:32,416:32,392:36,375:60,360:104,330:184,449:144,340:140,338:144,339:152,366:136,342:92,321:44,424:0,341:-8,354:-8,396:-20,395:-40,364:-48,326:-52,380:-32,376:-16,344:4,366:24,349:28,334:32,402:28,357:24,421:-20,455:-52,326:-152,479:-172,360:-216,358:-244,342:-252,351:-252,353:-248,333:-228,313:-236,323:-240,324:-240,324:-244,334:-248,341:-256,340:-252,335:-316,282:-412,184:-452,93:-420,140:-360,247:-276,329:-272,342:-288,361:-272,343:-224,282:-220,274:-248,264:-364,309:-356,218:-376,186:-356,169:-388,182:-380,173:-420,177:-392,140:-404,138:-396,130:-396,135:-392,130:-376,128:-396,131:-392,133:-408,140:-392,130:-376,128:-392,130:-376,128:-396,132:-424,143:-496,165:-432,119:-448,96:-472,91:-412,81:-456,86:-508,121:-516,231:-308,224:-248,270:-184,311:-112,357:-72,388:-72,385:-68,371:-64,390:-56,375:-64,399:-64,415:-64,426:-64,416:-60,397:-76,379:-160,380:-248,341:-328,302:-320,287:-180,329:-20,355:132,354:156,341:140,313:184,394:148,324:176,375:168,373:0,384:-264,251:-408,122:-440,121:-432,154:-496,138:-512,161:-532,136:-544,120:-448,120:-492,139:-436,122:-432,123:-416,118:-404,111:-564,158:-548,154:-408,107:-416,97:-408,113:-488,170:-316,345:-404,228:-460,75:-400,183:-428,191:60,387:140,367:-316,269:-428,141:-488,169:-372,132:-376,132:-524,40:-468,-165:-488,-154:-444,-79:-56,332:156,332:144,320:100,441:36,374:-140,313:-116,338:-260,285:-272,-40:0,0\",",
+					"          \"usedRouteDescription\": \"집 : 초보자용 넓은길 위주\",",
+					"          \"usedRouteId\": \"test-routeid-1\"",
+					"        },",
+					"        \"removeBody\": {",
+					"          \"usedFavoriteRouteIds\":[\"test-routeid-1\", \"test-routeid-2\"]",
+					"        }",
+					"    }",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "6ea431b0-df3e-435e-b8a9-31e95855beef",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

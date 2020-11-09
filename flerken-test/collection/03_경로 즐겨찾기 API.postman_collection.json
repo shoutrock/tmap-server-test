@@ -1,0 +1,2229 @@
+{
+	"info": {
+		"_postman_id": "bccc5d3b-e9c7-4cba-83c4-95b0305804da",
+		"name": "03_경로 즐겨찾기 API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "03_01_경로 즐겨찾기 조회",
+			"item": [
+				{
+					"name": "03_01_01_즐겨찾는 경로 포함 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"경로 list 확인\"] = resultBody.routeFavoriteViewDtos && resultBody.routeFavoriteViewDtos.length > 0;",
+									"",
+									"tests[\"즐겨찾는 경로 있음\"] = resultBody.routeMyFavoriteViewDto && resultBody.routeMyFavoriteViewDto.startRouteDto && resultBody.routeMyFavoriteViewDto.endRouteDto && resultBody.routeMyFavoriteViewDto.routeTitle;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e509175-42f5-42da-827d-d8267f36df5c",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 데이터 사전 등록",
+									"let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let uploadBody = routeFavorite.uploadBody;",
+									"uploadBody.minNo = pm.variables.get('minNo');",
+									"uploadBody.userKey = pm.variables.get('userKey');",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite?minNo={{minNo}}&userKey={{userKey}}&myRouteYn=Y",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "myRouteYn",
+									"value": "Y"
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_01_02_즐겨찾는 경로 미포함 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"경로 list 확인\"] = resultBody.routeFavoriteViewDtos && resultBody.routeFavoriteViewDtos.length > 0;",
+									"",
+									"tests[\"즐겨찾는 경로 없음\"] = resultBody.routeMyFavoriteViewDto === null;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "528f93e4-09b8-4914-bc8d-d716d3c9e37d",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 데이터 사전 등록",
+									"let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let uploadBody = routeFavorite.uploadBody;",
+									"uploadBody.minNo = pm.variables.get('minNo');",
+									"uploadBody.userKey = pm.variables.get('userKey');",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite?minNo={{minNo}}&userKey={{userKey}}&myRouteYn=N",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "myRouteYn",
+									"value": "N"
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_01_03_MDN 기준 데이터 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"경로 list 확인\"] = resultBody.routeFavoriteViewDtos && resultBody.routeFavoriteViewDtos.length > 0;",
+									"",
+									"tests[\"즐겨찾는 경로 있음\"] = resultBody.routeMyFavoriteViewDto && resultBody.routeMyFavoriteViewDto.startRouteDto && resultBody.routeMyFavoriteViewDto.endRouteDto && resultBody.routeMyFavoriteViewDto.routeTitle;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "528f93e4-09b8-4914-bc8d-d716d3c9e37d",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 데이터 사전 등록",
+									"let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let uploadBody = routeFavorite.uploadBody;",
+									"uploadBody.minNo = pm.variables.get('minNo');",
+									"uploadBody.userKey = null;",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite?minNo={{minNo}}&userKey=&myRouteYn=Y",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": ""
+								},
+								{
+									"key": "myRouteYn",
+									"value": "Y"
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_01_04_UserKey 기준 데이터 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"경로 list 확인\"] = resultBody.routeFavoriteViewDtos && resultBody.routeFavoriteViewDtos.length > 0;",
+									"",
+									"tests[\"즐겨찾는 경로 있음\"] = resultBody.routeMyFavoriteViewDto && resultBody.routeMyFavoriteViewDto.startRouteDto && resultBody.routeMyFavoriteViewDto.endRouteDto && resultBody.routeMyFavoriteViewDto.routeTitle;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "528f93e4-09b8-4914-bc8d-d716d3c9e37d",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 데이터 사전 등록",
+									"let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let uploadBody = routeFavorite.uploadBody;",
+									"uploadBody.minNo = null;",
+									"uploadBody.userKey = pm.variables.get('userKey');",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite?minNo=&userKey={{userKey}}&myRouteYn=Y",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": ""
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "myRouteYn",
+									"value": "Y"
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_01_05_등록된 데이터가 없을 때 조회 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code === 'POI04001R';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode === 'NULLRESULT_ERROR';",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e509175-42f5-42da-827d-d8267f36df5c",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 전체 데이터 삭제",
+									"let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let uploadBody = routeFavorite.uploadBody;",
+									"uploadBody.minNo = pm.variables.get('minNo');",
+									"uploadBody.userKey = pm.variables.get('userKey');",
+									"uploadBody.routeFavoriteRegistDtos = [];",
+									"uploadBody.routeMyFavoriteRegistDtos = null;",
+									"uploadBody.uploadOption = 'FI_MC';",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 전체 데이터 삭제', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite?minNo={{minNo}}&userKey={{userKey}}&myRouteYn=Y",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								},
+								{
+									"key": "myRouteYn",
+									"value": "Y"
+								}
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "03_02_경로 즐겨찾기 멀티 등록",
+			"item": [
+				{
+					"name": "03_02_01_단건 등록 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905c2ef7-5e98-4239-8153-6d13da3bcf24",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 전체 데이터 삭제",
+									"let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let uploadBody = {",
+									"    \"minNo\": pm.variables.get('minNo'),",
+									"    \"userKey\": pm.variables.get('userKey'),",
+									"    \"routeFavoriteRegistDtos\": null,",
+									"    \"routeMyFavoriteRegistDto\": null,",
+									"    \"uploadOption\": \"FI_MC\"",
+									"};",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 전체 삭제', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_02_02_중복 경로 재등록시 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 400;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code === 'POI03001R';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode === 'REQUEST_VALIDATE_ERROR';",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905c2ef7-5e98-4239-8153-6d13da3bcf24",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 전체 데이터 삭제",
+									"let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let uploadBody = {",
+									"    \"minNo\": pm.variables.get('minNo'),",
+									"    \"userKey\": pm.variables.get('userKey'),",
+									"    \"routeFavoriteRegistDtos\": null,",
+									"    \"routeMyFavoriteRegistDto\": null,",
+									"    \"uploadOption\": \"FI_MC\"",
+									"};",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 전체 삭제', () => pm.expect(response).to.have.status(200));",
+									"    registPreData();",
+									"});",
+									"",
+									"function registPreData() {",
+									"    // 요청 경로와 동일 경로 사전 등록",
+									"    url = pm.variables.get('host') + routeFavorite.uri;",
+									"    let registBody = JSON.parse(pm.request.body.raw);",
+									"    registBody.minNo = pm.variables.get('minNo');",
+									"    registBody.userKey = pm.variables.get('userKey');",
+									"    pm.sendRequest({",
+									"        url: url,",
+									"        method: 'POST',",
+									"        header: utils.getHeader(),",
+									"        body: JSON.stringify(registBody)",
+									"    }, function (err, response) {",
+									"        pm.test('Pre] 동일 경로 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"    });   ",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_02_03_멀티 등록 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905c2ef7-5e98-4239-8153-6d13da3bcf24",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 전체 데이터 삭제",
+									"let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let body = {",
+									"    \"minNo\": pm.variables.get('minNo'),",
+									"    \"userKey\": pm.variables.get('userKey'),",
+									"    \"routeFavoriteRegistDtos\": null,",
+									"    \"routeMyFavoriteRegistDto\": null,",
+									"    \"uploadOption\": \"FI_MC\"",
+									"};",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 전체 삭제', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    },\n    {\n      \"routeTitle\": \"두번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [],\n      \"endRouteDto\": {\n        \"name\": \"신금호파크자이\",\n        \"navX\": \"4572788\",\n        \"navY\": \"1351920\",\n        \"poiId\": \"6092066\",\n        \"rpFlag\": 16\n      }\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_02_04_파라미터에 중복 경로 존재시 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 400;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code = 'POI03001R';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode = 'VALIDATE_ERROR';",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905c2ef7-5e98-4239-8153-6d13da3bcf24",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 전체 데이터 삭제",
+									"let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let body = {",
+									"    \"minNo\": pm.variables.get('minNo'),",
+									"    \"userKey\": pm.variables.get('userKey'),",
+									"    \"routeFavoriteRegistDtos\": null,",
+									"    \"routeMyFavoriteRegistDto\": null,",
+									"    \"uploadOption\": \"FI_MC\"",
+									"};",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 전체 삭제', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    },\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_02_05_파라미터에서 최대 등록건수 초과시 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 400;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code === 'POI03002U';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode === 'REQUEST_VALIDATE_ERROR';",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905c2ef7-5e98-4239-8153-6d13da3bcf24",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"let url = pm.variables.get('host') + routeFavorite.uri;",
+									"let registBody = routeFavorite.registBody;",
+									"registBody.minNo = pm.variables.get('minNo');",
+									"registBody.userKey = pm.variables.get('userKey');",
+									"",
+									"// 경로 201건 생성",
+									"let sampleRouteDto = registBody.routeFavoriteRegistDtos[0]",
+									"for (let i = 0; i < 201; i++) {",
+									"    // routeTitle 만 변경하여 201건 경로 복사",
+									"    let routeDto = _.extend({}, sampleRouteDto, {routeTitle: '새 경로' + i});",
+									"    registBody.routeFavoriteRegistDtos.add(routeDto);",
+									"}",
+									"console.log(registBody);",
+									"",
+									"pm.variables.set('pre_scripted_body', JSON.stringify(registBody));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{pre_scripted_body}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_02_06_MDN 기준 정상 등록 테스트",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905c2ef7-5e98-4239-8153-6d13da3bcf24",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 전체 데이터 삭제",
+									"let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let uploadBody = {",
+									"    \"minNo\": pm.variables.get('minNo'),",
+									"    \"userKey\": null,",
+									"    \"routeFavoriteRegistDtos\": null,",
+									"    \"routeMyFavoriteRegistDto\": null,",
+									"    \"uploadOption\": \"FI_MC\"",
+									"};",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 전체 삭제', () => pm.expect(response).to.have.status(200));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": null,\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_02_07_기등록된 데이터로 인해 최대 등록 건수 초과시 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 400;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code === 'POI03002U';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode === 'FAILRESULT_ERROR';"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905c2ef7-5e98-4239-8153-6d13da3bcf24",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 100건 데이터 등록 호출",
+									"// userKey_exceedTest key로 100건 데이터 등록해 놓고 유지할것! (1회 호출 후 주석처리)",
+									"//regist100CountData();",
+									"",
+									"function regist100CountData() {",
+									"    let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"    let uploadBody = routeFavorite.uploadBody;",
+									"    uploadBody.minNo = pm.variables.get(\"minNo_exceedTest\");",
+									"    uploadBody.userKey = pm.variables.get(\"userKey_exceedTest\");",
+									"    ",
+									"    // 경로 100건 생성",
+									"    let sampleRoute = uploadBody.routeFavoriteRegistDtos[0]",
+									"    uploadBody.routeFavoriteRegistDtos = [];",
+									"    for (let i = 1; i <= 100; i++) {",
+									"        // 명칭 만 변경하여 100건 경로 복사",
+									"        let routeDto = _.extend({}, sampleRoute, {routeTitle: '최대등록건수_초과_테스트_' + i});",
+									"        uploadBody.routeFavoriteRegistDtos.add(routeDto);",
+									"    }",
+									"    console.log(uploadBody);",
+									"    ",
+									"    pm.sendRequest({",
+									"        url: url,",
+									"        method: 'POST',",
+									"        header: utils.getHeader(),",
+									"        body: JSON.stringify(uploadBody)",
+									"    }, function (err, response) {",
+									"        pm.test('Pre] 100 건 데이터 등록', () => pm.expect(response).to.have.status(200));",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo_exceedTest}}\",\n  \"userKey\": \"{{userKey_exceedTest}}\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "03_03_경로 즐겨찾기 전체 업로드",
+			"item": [
+				{
+					"name": "03_03_01_단건 업로드 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"uploadOption\": \"FI\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n  ],\n  \"routeMyFavoriteRegistDto\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite/upload",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite",
+								"upload"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_03_02_멀티 업로드 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"uploadOption\": \"FI\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    },\n    {\n      \"routeTitle\": \"두번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [],\n      \"endRouteDto\": {\n        \"name\": \"신금호파크자이\",\n        \"navX\": \"4572788\",\n        \"navY\": \"1351920\",\n        \"poiId\": \"6092066\",\n        \"rpFlag\": 16\n      }\n    }\n  ],\n  \"routeMyFavoriteRegistDto\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite/upload",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite",
+								"upload"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_03_03_파라미터에 중복 경로 존재시 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 400;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['에러 code 확인'] = resultBody.code === 'POI03001R';",
+									"tests['reasonCcode 확인'] = resultBody.reasonCode === 'REQUEST_VALIDATE_ERROR';"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"uploadOption\": \"FI\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    },\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n  ],\n  \"routeMyFavoriteRegistDto\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite/upload",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite",
+								"upload"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_03_04_파라미터에서 최대 등록건수 초과시 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests['ResponseCode 확인'] = pm.response.code === 400;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests['code 확인'] = resultBody.code === 'POI03002U';",
+									"tests['reasonCode 확인'] = resultBody.reasonCode === 'REQUEST_VALIDATE_ERROR';"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ebdba52b-aa39-44c0-8175-d38cf541cead",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"let url = pm.variables.get('host') + routeFavorite.uri;",
+									"let uploadBody = routeFavorite.uploadBody;",
+									"uploadBody.minNo = pm.variables.get('minNo');",
+									"uploadBody.userKey = pm.variables.get('userKey');",
+									"uploadBody.uploadOption = \"FI\";",
+									"",
+									"// 경로 201건 생성",
+									"let sampleRouteDto = uploadBody.routeFavoriteRegistDtos[0]",
+									"for (let i = 0; i < 201; i++) {",
+									"    // routeTitle 만 변경하여 201건 경로 복사",
+									"    let routeDto = _.extend({}, sampleRouteDto, {routeTitle: '새 경로' + i});",
+									"    uploadBody.routeFavoriteRegistDtos.add(routeDto);",
+									"}",
+									"console.log(uploadBody);",
+									"",
+									"pm.variables.set('pre_scripted_body', JSON.stringify(uploadBody));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{pre_scripted_body}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite/upload",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite",
+								"upload"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_03_05_자주가는 경로 설정 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"uploadOption\": \"MS\",\n  \"routeFavoriteRegistDtos\": null,\n  \"routeMyFavoriteRegistDto\": {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDto1\": {\n    \t\"name\": \"왕십리 이마트점\",\n        \"navX\": \"4573465\",\n        \"navY\": \"1352064\",\n        \"poiId\": \"1551025\",\n        \"rpFlag\": 8\t\n\t  },\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite/upload",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite",
+								"upload"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_03_06_자주가는 경로 초기화 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"uploadOption\": \"MC\",\n  \"routeFavoriteRegistDtos\": null,\n  \"routeMyFavoriteRegistDto\": {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDto1\": {\n    \t\"name\": \"왕십리 이마트점\",\n        \"navX\": \"4573465\",\n        \"navY\": \"1352064\",\n        \"poiId\": \"1551025\",\n        \"rpFlag\": 8\t\n\t  },\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite/upload",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite",
+								"upload"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_03_07_경로 전체 업로드 + 자주가는 경로 설정 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"uploadOption\": \"FI_MS\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n  ],\n  \"routeMyFavoriteRegistDto\": {\n      \"routeTitle\": \"즐겨찾는 경로\",\n      \"startRouteDto\": {\n        \"name\": \"경기도 고양시 덕양구 관산동\",\n        \"navX\": \"4567288\",\n        \"navY\": \"1357906\",\n        \"poiId\": null,\n        \"rpFlag\": 0\n      },\n      \"endRouteDto\": {\n        \"name\": \"월곶풍림아이원1차아파트\",\n        \"navX\": \"4562665\",\n        \"navY\": \"1345941\",\n        \"poiId\": \"719365\",\n        \"rpFlag\": 0\n      },\n      \"midRouteDto1\": {\n          \"name\": \"경유지1\",\n          \"navX\": \"4562665\",\n          \"navY\": \"1345941\",\n          \"poiId\": \"719365\",\n          \"rpFlag\": 0\n      },\n      \"midRouteDto2\": {\n          \"name\": \"경유지2\",\n          \"navX\": \"4562665\",\n          \"navY\": \"1345941\",\n          \"poiId\": \"719365\",\n          \"rpFlag\": 0\n      }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite/upload",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite",
+								"upload"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_03_08_경로 전체 업로드 + 자주가는 경로 초기화 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"uploadOption\": \"FI_MC\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n  ],\n  \"routeMyFavoriteRegistDto\": {\n      \"routeTitle\": \"즐겨찾는 경로\",\n      \"startRouteDto\": {\n        \"name\": \"경기도 고양시 덕양구 관산동\",\n        \"navX\": \"4567288\",\n        \"navY\": \"1357906\",\n        \"poiId\": null,\n        \"rpFlag\": 0\n      },\n      \"endRouteDto\": {\n        \"name\": \"월곶풍림아이원1차아파트\",\n        \"navX\": \"4562665\",\n        \"navY\": \"1345941\",\n        \"poiId\": \"719365\",\n        \"rpFlag\": 0\n      },\n      \"midRouteDto1\": {\n          \"name\": \"경유지1\",\n          \"navX\": \"4562665\",\n          \"navY\": \"1345941\",\n          \"poiId\": \"719365\",\n          \"rpFlag\": 0\n      },\n      \"midRouteDto2\": {\n          \"name\": \"경유지2\",\n          \"navX\": \"4562665\",\n          \"navY\": \"1345941\",\n          \"poiId\": \"719365\",\n          \"rpFlag\": 0\n      }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite/upload",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite",
+								"upload"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				},
+				{
+					"name": "03_03_09_MDN 기준 경로 전체 업로드 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"uploadOption\": \"FI_MC\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    }\n  ],\n  \"routeMyFavoriteRegistDto\": {\n      \"routeTitle\": \"즐겨찾는 경로\",\n      \"startRouteDto\": {\n        \"name\": \"경기도 고양시 덕양구 관산동\",\n        \"navX\": \"4567288\",\n        \"navY\": \"1357906\",\n        \"poiId\": null,\n        \"rpFlag\": 0\n      },\n      \"endRouteDto\": {\n        \"name\": \"월곶풍림아이원1차아파트\",\n        \"navX\": \"4562665\",\n        \"navY\": \"1345941\",\n        \"poiId\": \"719365\",\n        \"rpFlag\": 0\n      },\n      \"midRouteDto1\": {\n          \"name\": \"경유지1\",\n          \"navX\": \"4562665\",\n          \"navY\": \"1345941\",\n          \"poiId\": \"719365\",\n          \"rpFlag\": 0\n      },\n      \"midRouteDto2\": {\n          \"name\": \"경유지2\",\n          \"navX\": \"4562665\",\n          \"navY\": \"1345941\",\n          \"poiId\": \"719365\",\n          \"rpFlag\": 0\n      }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite/upload",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite",
+								"upload"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "03_04_경로 즐겨찾기 멀티 삭제",
+			"item": [
+				{
+					"name": "03_04_01_경로 멀티 삭제 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d3ba831-3889-4245-a185-ca6f6e2a88bf",
+								"exec": [
+									"tests[\"ResponseCode 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "96fddc9e-c810-460c-b774-57dbfb14e04b",
+								"exec": [
+									"let routeFavorite = eval(globals.routeFavorite)();",
+									"let utils = eval(globals.utils)();",
+									"",
+									"// 전체 데이터 삭제",
+									"let url = pm.variables.get('host') + routeFavorite.uploadUri;",
+									"let uploadBody = {",
+									"    \"minNo\": pm.variables.get('minNo'),",
+									"    \"userKey\": pm.variables.get('userKey'),",
+									"    \"routeFavoriteRegistDtos\": null,",
+									"    \"routeMyFavoriteRegistDto\": null,",
+									"    \"uploadOption\": \"FI_MC\"",
+									"};",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    method: 'POST',",
+									"    header: utils.getHeader(),",
+									"    body: JSON.stringify(uploadBody)",
+									"}, function (err, response) {",
+									"    pm.test('Pre] 데이터 전체 삭제', () => pm.expect(response).to.have.status(200));",
+									"    registPreData();",
+									"});",
+									"",
+									"function registPreData() {",
+									"    // 삭제할 경로와 동일 경로 사전 등록",
+									"    url = pm.variables.get('host') + routeFavorite.uri;",
+									"    let registBody = JSON.parse(pm.request.body.raw);",
+									"    registBody.minNo = pm.variables.get('minNo');",
+									"    registBody.userKey = pm.variables.get('userKey');",
+									"    pm.sendRequest({",
+									"        url: url,",
+									"        method: 'POST',",
+									"        header: utils.getHeader(),",
+									"        body: JSON.stringify(registBody)",
+									"    }, function (err, response) {",
+									"        pm.test('Pre] 동일 경로 사전 등록', () => pm.expect(response).to.have.status(200));",
+									"    });   ",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"userKey\": \"{{userKey}}\",\n  \"routeFavoriteRegistDtos\": [\n    {\n      \"routeTitle\": \"첫번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [\n      \t{\n        \t\"name\": \"왕십리 이마트점\",\n            \"navX\": \"4573465\",\n            \"navY\": \"1352064\",\n            \"poiId\": \"1551025\",\n            \"rpFlag\": 8\t\n    \t}\n      ],\n      \"endRouteDto\": {\n        \"name\": \"천호역[8호선]\",\n        \"navX\": \"4576526\",\n        \"navY\": \"1351314\",\n        \"poiId\": \"280407\",\n        \"rpFlag\": 5\n      }\n    },\n    {\n      \"routeTitle\": \"두번째 경로\",\n      \"startRouteDto\": {\n        \"name\": \"파인애비뉴\",\n        \"navX\": \"4571653\",\n        \"navY\": \"1352256\",\n        \"poiId\": \"2786471\",\n        \"rpFlag\": 17\n      },\n      \"midRouteDtos\": [],\n      \"endRouteDto\": {\n        \"name\": \"신금호파크자이\",\n        \"navX\": \"4572788\",\n        \"navY\": \"1351920\",\n        \"poiId\": \"6092066\",\n        \"rpFlag\": 16\n      }\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/route-favorite",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"route-favorite"
+							]
+						},
+						"description": "경로 즐겨찾기 조회"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "353c1504-6099-4529-adae-dd33ed8ca543",
+				"type": "text/javascript",
+				"exec": [
+					"postman.setGlobalVariable('routeFavorite', () => {",
+					"    return {",
+					"        uri: \"/api/v1/route-favorite\",",
+					"        uploadUri: \"/api/v1/route-favorite/upload\",",
+					"        registBody: {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"userKey\": \"{{userKey}}\",",
+					"          \"routeFavoriteRegistDtos\": [",
+					"            {",
+					"              \"routeTitle\": \"첫번째 경로\",",
+					"              \"startRouteDto\": {",
+					"                \"name\": \"파인애비뉴\",",
+					"                \"navX\": \"4571653\",",
+					"                \"navY\": \"1352256\",",
+					"                \"poiId\": \"2786471\",",
+					"                \"rpFlag\": 17",
+					"              },",
+					"              \"midRouteDtos\": [",
+					"              \t{",
+					"                \t\"name\": \"왕십리 이마트점\",",
+					"                    \"navX\": \"4573465\",",
+					"                    \"navY\": \"1352064\",",
+					"                    \"poiId\": \"1551025\",",
+					"                    \"rpFlag\": 8\t",
+					"            \t}",
+					"              ],",
+					"              \"endRouteDto\": {",
+					"                \"name\": \"천호역[8호선]\",",
+					"                \"navX\": \"4576526\",",
+					"                \"navY\": \"1351314\",",
+					"                \"poiId\": \"280407\",",
+					"                \"rpFlag\": 5",
+					"              }",
+					"            }",
+					"          ]",
+					"        },",
+					"        removeBody: {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"userKey\": \"{{userKey}}\",",
+					"          \"routeFavoriteRegistDtos\": [",
+					"            {",
+					"              \"routeTitle\": \"첫번째 경로\",",
+					"              \"startRouteDto\": {",
+					"                \"name\": \"파인애비뉴\",",
+					"                \"navX\": \"4571653\",",
+					"                \"navY\": \"1352256\",",
+					"                \"poiId\": \"2786471\",",
+					"                \"rpFlag\": 17",
+					"              },",
+					"              \"midRouteDtos\": [",
+					"              \t{",
+					"                \t\"name\": \"왕십리 이마트점\",",
+					"                    \"navX\": \"4573465\",",
+					"                    \"navY\": \"1352064\",",
+					"                    \"poiId\": \"1551025\",",
+					"                    \"rpFlag\": 8\t",
+					"            \t}",
+					"              ],",
+					"              \"endRouteDto\": {",
+					"                \"name\": \"천호역[8호선]\",",
+					"                \"navX\": \"4576526\",",
+					"                \"navY\": \"1351314\",",
+					"                \"poiId\": \"280407\",",
+					"                \"rpFlag\": 5",
+					"              }",
+					"            }",
+					"          ]",
+					"        },",
+					"        uploadBody: {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"userKey\": \"{{userKey}}\",",
+					"          \"routeFavoriteRegistDtos\": [",
+					"            {",
+					"              \"routeTitle\": \"첫번째 경로\",",
+					"              \"startRouteDto\": {",
+					"                \"name\": \"파인애비뉴\",",
+					"                \"navX\": \"4571653\",",
+					"                \"navY\": \"1352256\",",
+					"                \"poiId\": \"2786471\",",
+					"                \"rpFlag\": 17",
+					"              },",
+					"              \"midRouteDtos\": [",
+					"              \t{",
+					"                \t\"name\": \"왕십리 이마트점\",",
+					"                    \"navX\": \"4573465\",",
+					"                    \"navY\": \"1352064\",",
+					"                    \"poiId\": \"1551025\",",
+					"                    \"rpFlag\": 8\t",
+					"            \t}",
+					"              ],",
+					"              \"endRouteDto\": {",
+					"                \"name\": \"천호역[8호선]\",",
+					"                \"navX\": \"4576526\",",
+					"                \"navY\": \"1351314\",",
+					"                \"poiId\": \"280407\",",
+					"                \"rpFlag\": 5",
+					"              }",
+					"            }",
+					"          ],",
+					"          \"routeMyFavoriteRegistDto\": {",
+					"              \"routeTitle\": \"즐겨찾는 경로\",",
+					"              \"startRouteDto\": {",
+					"                \"name\": \"경기도 고양시 덕양구 관산동\",",
+					"                \"navX\": \"4567288\",",
+					"                \"navY\": \"1357906\",",
+					"                \"poiId\": null,",
+					"                \"rpFlag\": 0",
+					"              },",
+					"              \"endRouteDto\": {",
+					"                \"name\": \"월곶풍림아이원1차아파트\",",
+					"                \"navX\": \"4562665\",",
+					"                \"navY\": \"1345941\",",
+					"                \"poiId\": \"719365\",",
+					"                \"rpFlag\": 0",
+					"              },",
+					"              \"midRouteDto1\": {",
+					"                  \"name\": \"경유지1\",",
+					"                  \"navX\": \"4562665\",",
+					"                  \"navY\": \"1345941\",",
+					"                  \"poiId\": \"719365\",",
+					"                  \"rpFlag\": 0",
+					"              },",
+					"              \"midRouteDto2\": {",
+					"                  \"name\": \"경유지2\",",
+					"                  \"navX\": \"4562665\",",
+					"                  \"navY\": \"1345941\",",
+					"                  \"poiId\": \"719365\",",
+					"                  \"rpFlag\": 0",
+					"              }",
+					"          },",
+					"          \"uploadOption\": \"FI_MS\"",
+					"        }",
+					"    }",
+					"});",
+					"",
+					"",
+					"postman.setGlobalVariable('utils', () => {",
+					"    let getHeader = () => {",
+					"      return {",
+					"        'chcode': pm.variables.get('chcode'),",
+					"        'cp_channel.apcode': pm.variables.get('cp_channel.apcode'),",
+					"        'cp_channel.ostype': pm.variables.get('cp_channel.ostype'),",
+					"        'tid': pm.variables.get('tid'),",
+					"        'content-type': 'application/json'",
+					"      };",
+					"    };",
+					"    ",
+					"    return {",
+					"        getHeader: getHeader",
+					"    }",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d8e03bdc-7025-446c-a035-f01f1841de33",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

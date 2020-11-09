@@ -1,0 +1,633 @@
+{
+	"info": {
+		"_postman_id": "dd7c5587-c7c6-475f-89dc-295056c2d378",
+		"name": "05_고객 프로파일",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "05_01_고객정보 저장",
+			"item": [
+				{
+					"name": "05_01_01_기존 등록된 상태에서 고객정보 저장 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d00f8dce-c666-4332-a775-7fe8285915b4",
+								"exec": [
+									"let personalInfo = eval(globals.personalInfo)();",
+									"let url = pm.variables.get(\"host\") + personalInfo.uri;",
+									"let body = personalInfo.registBody;",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"birth\": 19880505,\n  \"email\": \"test@sk.com\",\n  \"mdn\": \"01000000000\",\n  \"userKey\": \"{{userKey}}\",\n  \"userName\": \"test\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/personal-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"personal-info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "05_01_02_이메일,휴대폰번호 고객정보 저장 안되는것 확인",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"",
+									"let personalInfo = eval(globals.personalInfo)();",
+									"let url = pm.variables.get(\"host\") + personalInfo.uri + \"?userKey=\"+pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'GET',",
+									"    header:eval(globals.getHeader)()",
+									"}, function (err, res) {",
+									"  pm.test(\"MDN 확인\", () => pm.expect(res.json().mdn).to.eql(null));",
+									"  pm.test(\"email 확인\", () => pm.expect(res.json().email).to.eql(null));",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d00f8dce-c666-4332-a775-7fe8285915b4",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"birth\": 19880505,\n  \"email\": \"test@sk.com\",\n  \"mdn\": \"01000000000\",\n  \"userKey\": \"{{userKey}}\",\n  \"userName\": \"test\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/personal-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"personal-info"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "05_02_고객정보 조회",
+			"item": [
+				{
+					"name": "05_02_01_고객정보 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"let personalInfo = eval(globals.personalInfo)();",
+									"let body = personalInfo.registBody;",
+									"tests[\"userName 확인\"] = resultBody.userName === body.userName;",
+									"tests[\"birth 확인\"] = resultBody.birth === body.birth+\"\";"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9eeb8e5e-6af2-4754-a4b8-c8cf427caf83",
+								"exec": [
+									"let personalInfo = eval(globals.personalInfo)();",
+									"let url = pm.variables.get(\"host\") + personalInfo.uri;",
+									"let body = personalInfo.registBody;",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/personal-info?userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"personal-info"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "05_03_차량정보 저장",
+			"item": [
+				{
+					"name": "05_03_01_하이패스차량여부Y 차량정보 저장 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"",
+									"let carInfo = eval(globals.carInfo)();",
+									"let url = pm.variables.get(\"host\") + carInfo.uri + \"?userKey=\"+pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'GET',",
+									"    header:eval(globals.getHeader)()",
+									"}, function (err, res) {",
+									"   pm.test(\"수정한 하이패스 값(Y) 확인\", () => pm.expect(res.json().hipassYn).to.eql(\"Y\"));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d00f8dce-c666-4332-a775-7fe8285915b4",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fuel\": \"FT_GAS\",\n  \"hipassYn\": \"Y\",\n  \"insurer\": \"INS_DB\",\n  \"insurerRegDate\": 20180505,\n  \"model\": \"CT_TRUCK\",\n  \"number\": \"00가0000\",\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/car-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"car-info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "05_03_02_하이패스차량여부N 차량정보 저장 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"",
+									"let carInfo = eval(globals.carInfo)();",
+									"let url = pm.variables.get(\"host\") + carInfo.uri + \"?userKey=\"+pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'GET',",
+									"    header:eval(globals.getHeader)()",
+									"}, function (err, res) {",
+									"   pm.test(\"하이패스 확인\", () => pm.expect(res.json().hipassYn).to.eql(\"N\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d00f8dce-c666-4332-a775-7fe8285915b4",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fuel\": \"FT_GAS\",\n  \"hipassYn\": \"N\",\n  \"insurer\": \"INS_DB\",\n  \"insurerRegDate\": 20180505,\n  \"model\": \"CT_TRUCK\",\n  \"number\": \"00가0000\",\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/car-info",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"car-info"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e81b35f1-ec88-402e-b845-d7b20f7637b8",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "68f06bdf-fe8e-44d5-8035-340fd94994a1",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "05_04_차량정보 조회",
+			"item": [
+				{
+					"name": "05_04_01_차량정보 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba4336db-8626-4133-a944-7bff931b9e50",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"let carInfo = eval(globals.carInfo)();",
+									"let body = carInfo.registBody;",
+									"",
+									"tests[\"model 확인\"] = resultBody.model === body.model;",
+									"tests[\"fule 확인\"] = resultBody.fuel === body.fuel;",
+									"tests[\"number 확인\"] = resultBody.number === body.number;",
+									"tests[\"insure 확인\"] = resultBody.insurer === body.insurer;",
+									"tests[\"insurerRegDate 확인\"] = resultBody.insurerRegDate === body.insurerRegDate+\"\";",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d00f8dce-c666-4332-a775-7fe8285915b4",
+								"exec": [
+									"let carInfo = eval(globals.carInfo)();",
+									"let url = pm.variables.get(\"host\") + carInfo.uri;",
+									"let body = carInfo.registBody;",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/car-info?userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"car-info"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "09ba4985-02be-42ba-b040-0a0e8d9bba0c",
+				"type": "text/javascript",
+				"exec": [
+					"postman.setGlobalVariable('personalInfo', () => {",
+					"    return {",
+					"        \"uri\": \"/api/v1/personal-info\",",
+					"        \"registBody\": {",
+					"          \"birth\": 19880505,",
+					"          \"email\": \"test@sk.com\",",
+					"          \"mdn\": \"01000000000\",",
+					"          \"userKey\": \"testuser\",",
+					"          \"userName\": \"test\"",
+					"        }",
+					"    }",
+					"});",
+					"",
+					"postman.setGlobalVariable('carInfo', () => {",
+					"    return {",
+					"        \"uri\": \"/api/v1/car-info\",",
+					"        \"registBody\": {",
+					"          \"fuel\": \"FT_GAS\",",
+					"          \"hipassYn\": \"N\",",
+					"          \"insurer\": \"INS_DB\",",
+					"          \"insurerRegDate\": 20180505,",
+					"          \"model\": \"CT_TRUCK\",",
+					"          \"number\": \"00가0000\",",
+					"          \"userKey\": \"testuser\"",
+					"        }",
+					"    }",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "75d142a3-164f-4489-a064-a241db0f1e2a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

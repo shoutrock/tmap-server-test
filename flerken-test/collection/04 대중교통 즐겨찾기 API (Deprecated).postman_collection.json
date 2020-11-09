@@ -1,0 +1,31 @@
+{
+	"info": {
+		"_postman_id": "00d006d9-32f9-4bb7-8171-25f013f525d6",
+		"name": "04 대중교통 즐겨찾기 API (Deprecated)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "46817bdc-42c1-47a6-9f17-ac934d351ab9",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "aabd75c1-33a8-4711-94fe-a780a841fc85",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -1,0 +1,2425 @@
+{
+	"info": {
+		"_postman_id": "1d3da906-7b08-4f9a-89ab-6e4208e6eb8d",
+		"name": "01_최근길 API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01_01_최근길 조회",
+			"item": [
+				{
+					"name": "01_01_01_UserKey 기준 데이터 조회 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "17fbfa31-9c37-44c6-aab3-6eb2aa498c14",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"list 확인\"] = resultBody.list;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "829a5154-7a44-4ff4-95f7-2631d2d29f70",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.registBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_01_02_조회 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9be83675-0e6d-4af8-b619-a2c53b66a6ff",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"",
+									"const resultBody = JSON.parse(responseBody);",
+									"",
+									"tests[\"code 확인\"] = resultBody.code === \"POI04001R\";",
+									"tests[\"resonCode 확인\"] = resultBody.reasonCode === \"NULLRESULT_ERROR\";",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "42e83811-72c8-420f-a761-7d30003a970b",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "01_02_최근길 등록",
+			"item": [
+				{
+					"name": "01_02_01_기존 등록된 상태에서 저장 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a889186e-455a-4956-af2f-b06811e0d21e",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "502d85df-5c9d-4dfb-bf29-0a86aed04d84",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.registBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"custName\": \"강남역5\",\n  \"minNo\": \"{{minNo}}\",\n  \"navSeq\": 0,\n  \"noorX\": 4571041,\n  \"noorY\": 1352921,\n  \"poiId\": 432108,\n  \"rpFlag\": 16,\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_02_기존 등록된 상태에서 저장 성공(fixedIndex가 not null)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "415e2bd7-9ba1-40bf-b538-076b41fd5174",
+								"exec": [
+									"tests['Response Code 확인'] = pm.response.code === 200;",
+									"",
+									"const poiRecent = eval(globals.poiRecent)();",
+									"const url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"pm.sendRequest({",
+									"    url: url + '?userKey=' + pm.variables.get('userKey'),",
+									"    async:false,",
+									"    method: 'GET',",
+									"    header:eval(globals.getHeader)(),",
+									"}, function (err, res) {",
+									"   assertEqualsValues(res.json());",
+									"});",
+									"",
+									"const assertEqualsValues = (responseJson) => {",
+									"   pm.test('FixedIndex not null 확인', () => pm.expect(responseJson.list[0].fixedIndex).to.eql(\"1\")",
+									"    );",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c6dd4874-f4c7-4681-86e7-ffe75f5f66e9",
+								"exec": [
+									"const poiRecent = eval(globals.poiRecent)();",
+									"const url = pm.variables.get(\"host\") + poiRecent.uploadUri;",
+									"const body = poiRecent.uploadBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'POST',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"    console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"value": "{{chcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"value": "{{cp_channel.apcode}}",
+								"type": "text"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"value": "{{cp_channel.ostype}}",
+								"type": "text"
+							},
+							{
+								"key": "tid",
+								"value": "{{tid}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"custName\": \"강남역5\",\n  \"minNo\": \"{{minNo}}\",\n  \"navSeq\": 0,\n  \"noorX\": 4571041,\n  \"noorY\": 1352921,\n  \"poiId\": 432108,\n  \"rpFlag\": 16,\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_03_기존 등록되지 않은 상태에서 저장 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "25de0fef-6c5d-418a-acb9-54454438fc2d",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "df80206c-1ae1-4d06-a39f-a4270fbbee16",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"custName\": \"강남역5\",\n  \"minNo\": \"{{minNo}}\",\n  \"navSeq\": 0,\n  \"noorX\": 4571041,\n  \"noorY\": 1352921,\n  \"poiId\": 432108,\n  \"rpFlag\": 16,\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_04_MinNo 기준 저장 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7574eccb-2fd8-40d3-8e82-5af58621d63d",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri + \"?minNo=\" + pm.variables.get('minNo');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'get',",
+									"    header:eval(globals.getHeader)()",
+									"}, function (err, res) {",
+									"   pm.test('데이터 저장 안됨 확인', () => pm.expect(res).to.have.status(200));",
+									"   pm.test('Error Code 확인', () => pm.expect(res.json().code).to.eql(\"POI04001R\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d6213634-7c33-455b-a2fc-e10c30fb670a",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = \"\";",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"custName\": \"강남역5\",\n  \"minNo\": \"{{minNo}}\",\n  \"navSeq\": 0,\n  \"noorX\": 4571041,\n  \"noorY\": 1352921,\n  \"poiId\": 432108,\n  \"rpFlag\": 16\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_05_목적지 명칭이 긴 경우 저장 성공 (영문)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7f19937b-ddbb-4180-aff7-818b2600cb74",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"",
+									"//테스트용으로 입력한 장소 삭제",
+									"const poiRecent = eval(globals.poiRecent)();",
+									"const url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"const body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"body.poiRecentUploads = [",
+									"        {",
+									"          \"custName\": \"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuv\",",
+									"          \"noorX\": 4571041,",
+									"          \"noorY\": 1352921",
+									"        }];",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"    console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "063b2c23-eeb7-4ab9-9430-35c8a100d6f0",
+								"exec": [
+									"const poiRecent = eval(globals.poiRecent)();",
+									"const url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"const body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"    console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"custName\": \"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz\",\n  \"minNo\": \"{{minNo}}\",\n  \"navSeq\": 0,\n  \"noorX\": 4571041,\n  \"noorY\": 1352921,\n  \"poiId\": 432108,\n  \"rpFlag\": 16,\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_05_목적지 명칭이 긴 경우 저장 성공 (한글, DEV 수행 제외)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f59979ce-c79c-4b6c-950d-8d6d4d7f465f",
+								"exec": [
+									"if (pm.environment.name == \"DEV\" || pm.environment.name == \"LOCAL\") {",
+									"  tests[\"Response Code 500 확인 (개발DB는 인코딩이 UTF-8이라 EUC-KR 기준으로 한글을 잘라서 등록하면 오류 발생)\"] = pm.response.code === 500;",
+									"} else {",
+									"  tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"",
+									"  //테스트용으로 입력한 장소 삭제",
+									"  const poiRecent = eval(globals.poiRecent)();",
+									"  const url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"  const body = poiRecent.removeBody;",
+									"  body.minNo = pm.variables.get('minNo');",
+									"  body.userKey = pm.variables.get('userKey');",
+									"  body.poiRecentUploads = [",
+									"          {",
+									"            \"custName\": \"합정 홍대입구 신촌 이대 아현 충정로 시청 을지로입구 을지로3가 을지로4가 동대문역사문화공원 신당 상왕\",",
+									"            \"noorX\": 4571041,",
+									"            \"noorY\": 1352921",
+									"          }];",
+									"",
+									"  pm.sendRequest({",
+									"      url: url,",
+									"      async: false,",
+									"      method: 'DELETE',",
+									"      header: eval(globals.getHeader)(),",
+									"      body: JSON.stringify(body)",
+									"  }, function (err, res) {",
+									"      console.log(res);",
+									"  });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4321268c-4880-4f49-9dd1-af216ee359ea",
+								"exec": [
+									"const poiRecent = eval(globals.poiRecent)();",
+									"const url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"const body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"    console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"custName\": \"합정 홍대입구 신촌 이대 아현 충정로 시청 을지로입구 을지로3가 을지로4가 동대문역사문화공원 신당 상왕십리 왕십리 한양대 뚝섬 성수 건대입구 구의 강변\",\n  \"minNo\": \"{{minNo}}\",\n  \"navSeq\": 0,\n  \"noorX\": 4571041,\n  \"noorY\": 1352921,\n  \"poiId\": 432108,\n  \"rpFlag\": 16,\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "01_03_최근길 삭제",
+			"item": [
+				{
+					"name": "01_03_01_기존 등록된 상태에서 삭제 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6b26b354-d7b0-4a45-a1c7-229d61dea06a",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "54dbca1c-7790-4ccb-8198-3acc86d8a436",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.registBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"강남역5\",\n      \"noorX\": 4571041,\n      \"noorY\": 1352921\n    }\n  ],\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_03_02_기존 등록되지 않은 상태에서 삭제 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d8e6cbc7-9f3d-4147-8558-efef5b4527b0",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4cbd82ce-2c8c-4689-99c8-f3f210304b3a",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"강남역5\",\n      \"noorX\": 4571041,\n      \"noorY\": 1352921\n    }\n  ],\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_03_03_파라미터에 삭제 해야되는 정보가 없어도 삭제 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc99fb0c-7bf9-42b7-af8c-82d5cf8c92ae",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2255e42f-60f3-4f05-ad2f-357f6df013ce",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n  ],\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "01_04_최근길 수정",
+			"item": [
+				{
+					"name": "01_04_01_기존 등록된 상태에서 수정 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8d362717-5281-450f-be85-60e7c4d5b41c",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cc37990c-f960-4907-880c-cd6c1d2b651d",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.registBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921\n    }\n  ],\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_04_02_기존 등록되지 않은 상태에서 수정 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5e5608a4-0410-4ead-960b-b597b78aff7f",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1e1fadb7-26ad-4206-9a5b-480c620c6b3d",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921\n    }\n  ],\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_04_03_파라미터에 삭제 해야되는 정보가 없어도 수정 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "658abe1c-a3f9-4e46-bc88-89d1eb4d56af",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "82a0c839-607c-4f8b-96ac-30f11b1b60f3",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.registBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n  ],\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "01_05_최근길 업로드",
+			"item": [
+				{
+					"name": "01_02_01_기존 등록된 상태에서 업로드 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8ec347ad-c39a-4b62-b278-913700c3723c",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "436705e7-48c6-428f-be08-cb4372a529c8",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.registBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    }\n  ],\n  \"svcUploadYn\": \"N\",\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination/upload?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination",
+								"upload"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_02_기존 등록되지 않은 상태에서 업로드 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a0376176-6f8d-4e19-b41a-3c64c8c10d78",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3c543164-bf6f-44c5-b4bb-41f0dece1f33",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    }\n  ],\n  \"svcUploadYn\": \"N\",\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination/upload?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination",
+								"upload"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_03_파라미터에 업로드 해야되는 정보가 없어도 업로드 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "713bee5a-3593-44d8-9ed3-50eeff8295c4",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f536901e-c7eb-4e3c-9707-ee300631bfbb",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    \n  ],\n  \"svcUploadYn\": \"N\",\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination/upload?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination",
+								"upload"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_04_파라미터에서 최대 등록건수 초과시 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "90e84ef0-9066-400e-88ea-d980b6ccdcf9",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 400;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "db2305f1-a7ee-495e-9893-9935a78ef2ae",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.registBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n     {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n     {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n     {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n     {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n     {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n     {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n     {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n     {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n     {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n       {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n    {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    }\n  ],\n  \"svcUploadYn\": \"N\",\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination/upload?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination",
+								"upload"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_05_파라미터에서 중복 건수 존재시 실패",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2f95659c-12b3-48de-9115-caa27f5b2034",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 400;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bc4df965-a792-4f84-933c-9fa464bc0fdb",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.registBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    },\n    {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    }\n  ],\n  \"svcUploadYn\": \"N\",\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination/upload?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination",
+								"upload"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_06_서비스 속성정보 업로드 Y일 경우 업로드 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2688e1cd-712a-43a7-ab0d-b0fb9a781b0e",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0d207682-3deb-42e5-b49a-8788d477fa01",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.registBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'POST',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    }\n  ],\n  \"svcUploadYn\": \"Y\",\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination/upload?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination",
+								"upload"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_07_MinNo 기준 업로드 성공",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6babfce6-cb07-4504-a0f2-726044533c40",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8a0011e1-4449-4b7d-8826-3fb353e7dd2f",
+								"exec": [
+									"let poiRecent = eval(globals.poiRecent)();",
+									"let url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"let body = poiRecent.registBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = \"\";",
+									"pm.sendRequest({",
+									"    url: url, ",
+									"    async:false,",
+									"    method: 'DELETE',",
+									"    header:eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"   console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"강남역5\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    }\n  ],\n  \"svcUploadYn\": \"N\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination/upload?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination",
+								"upload"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_08_목적지 명칭이 긴 경우 업로드 성공 (영문)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8a397b97-dff1-4fcb-a709-2a2c629c9a72",
+								"exec": [
+									"tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"",
+									"//테스트용으로 입력한 장소 삭제",
+									"const poiRecent = eval(globals.poiRecent)();",
+									"const url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"const body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"body.poiRecentUploads = [",
+									"        {",
+									"          \"custName\": \"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuv\",",
+									"          \"noorX\": 4571041,",
+									"          \"noorY\": 1352921",
+									"        }];",
+									"",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"    console.log(res);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a0fd9677-74f6-4ec8-bc27-40efa5cc80a1",
+								"exec": [
+									"const poiRecent = eval(globals.poiRecent)();",
+									"const url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"const body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"    console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    }\n  ],\n  \"svcUploadYn\": \"N\",\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination/upload?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination",
+								"upload"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_02_08_목적지 명칭이 긴 경우 업로드 성공 (한글, DEV 수행 제외)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0c13afc9-5d47-4ac9-bd71-6018398f2107",
+								"exec": [
+									"if (pm.environment.name == \"DEV\" || pm.environment.name == \"LOCAL\") {",
+									"  tests[\"Response Code 500 확인 (개발DB는 인코딩이 UTF-8이라 EUC-KR 기준으로 한글을 잘라서 등록하면 오류 발생)\"] = pm.response.code === 500;",
+									"} else {",
+									"  tests[\"Response Code 확인\"] = pm.response.code === 200;",
+									"",
+									"  //테스트용으로 입력한 장소 삭제",
+									"  const poiRecent = eval(globals.poiRecent)();",
+									"  const url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"  const body = poiRecent.removeBody;",
+									"  body.minNo = pm.variables.get('minNo');",
+									"  body.userKey = pm.variables.get('userKey');",
+									"  body.poiRecentUploads = [",
+									"          {",
+									"            \"custName\": \"합정 홍대입구 신촌 이대 아현 충정로 시청 을지로입구 을지로3가 을지로4가 동대문역사문화공원 신당 상왕\",",
+									"            \"noorX\": 4571041,",
+									"            \"noorY\": 1352921",
+									"          }];",
+									"",
+									"  pm.sendRequest({",
+									"      url: url,",
+									"      async: false,",
+									"      method: 'DELETE',",
+									"      header: eval(globals.getHeader)(),",
+									"      body: JSON.stringify(body)",
+									"  }, function (err, res) {",
+									"      console.log(res);",
+									"  });",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9bc66d4f-5a48-4e57-b56a-03017bde6191",
+								"exec": [
+									"const poiRecent = eval(globals.poiRecent)();",
+									"const url = pm.variables.get(\"host\") + poiRecent.uri;",
+									"const body = poiRecent.removeBody;",
+									"body.minNo = pm.variables.get('minNo');",
+									"body.userKey = pm.variables.get('userKey');",
+									"pm.sendRequest({",
+									"    url: url,",
+									"    async: false,",
+									"    method: 'DELETE',",
+									"    header: eval(globals.getHeader)(),",
+									"    body: JSON.stringify(body)",
+									"}, function (err, res) {",
+									"    console.log(res);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "chcode",
+								"type": "text",
+								"value": "{{chcode}}"
+							},
+							{
+								"key": "cp_channel.apcode",
+								"type": "text",
+								"value": "{{cp_channel.apcode}}"
+							},
+							{
+								"key": "cp_channel.ostype",
+								"type": "text",
+								"value": "{{cp_channel.ostype}}"
+							},
+							{
+								"key": "tid",
+								"type": "text",
+								"value": "{{tid}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"minNo\": \"{{minNo}}\",\n  \"poiRecentUploads\": [\n    {\n      \"custName\": \"합정 홍대입구 신촌 이대 아현 충정로 시청 을지로입구 을지로3가 을지로4가 동대문역사문화공원 신당 상왕십리 왕십리 한양대 뚝섬 성수 건대입구 구의 강변\",\n      \"fixedIndex\": 1,\n      \"navSeq\": 0,\n      \"noorX\": 4571041,\n      \"noorY\": 1352921,\n      \"poiId\": 432108,\n      \"rpFlag\": 16,\n      \"svcDate\": 20190705114015,\n      \"totalCnt\": 0\n    }\n  ],\n  \"svcUploadYn\": \"N\",\n  \"userKey\": \"{{userKey}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/poi-recent-destination/upload?minNo={{minNo}}&userKey={{userKey}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"poi-recent-destination",
+								"upload"
+							],
+							"query": [
+								{
+									"key": "minNo",
+									"value": "{{minNo}}"
+								},
+								{
+									"key": "userKey",
+									"value": "{{userKey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "4b16c58b-d879-4de6-a56d-5afa65353300",
+				"type": "text/javascript",
+				"exec": [
+					"postman.setGlobalVariable('poiRecent', () => {",
+					"    return {",
+					"        \"uri\": \"/api/v1/poi-recent-destination\",",
+					"        \"uploadUri\": \"/api/v1/poi-recent-destination/upload\",",
+					"        \"registBody\": {",
+					"          \"custName\": \"강남역5\",",
+					"          \"fixedIndex\": 1,",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"navSeq\": 0,",
+					"          \"noorX\": 4571041,",
+					"          \"noorY\": 1352921,",
+					"          \"poiId\": 432108,",
+					"          \"rpFlag\": 16,",
+					"          \"userKey\": \"{{userKey}}\"",
+					"        },",
+					"        \"uploadBody\": {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"poiRecentUploads\": [",
+					"            {",
+					"              \"custName\": \"강남역5\",",
+					"              \"fixedIndex\": 1,",
+					"              \"navSeq\": 0,",
+					"              \"noorX\": 4571041,",
+					"              \"noorY\": 1352921,",
+					"              \"poiId\": 432108,",
+					"              \"rpFlag\": 16,",
+					"              \"svcDate\": 20190705114015,",
+					"              \"totalCnt\": 0",
+					"            }",
+					"          ],",
+					"          \"svcUploadYn\": \"N\",",
+					"          \"userKey\": \"{{userKey}}\"",
+					"        },",
+					"        \"removeBody\": {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"poiRecentUploads\": [",
+					"            {",
+					"              \"custName\": \"강남역5\",",
+					"              \"noorX\": 4571041,",
+					"              \"noorY\": 1352921",
+					"            }",
+					"          ],",
+					"          \"userKey\": \"{{userKey}}\"",
+					"        },",
+					"        \"modifyBody\": {",
+					"          \"minNo\": \"{{minNo}}\",",
+					"          \"poiRecentUploads\": [",
+					"            {",
+					"              \"custName\": \"강남역5\",",
+					"              \"fixedIndex\": 1,",
+					"              \"noorX\": 4571041,",
+					"              \"noorY\": 1352921",
+					"            }",
+					"          ],",
+					"          \"userKey\": \"{{userKey}}\"",
+					"        }",
+					"    }",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "cee05719-2b49-4191-bb8e-04002db47c3b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
